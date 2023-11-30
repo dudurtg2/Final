@@ -1,44 +1,30 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
-struct {
-    int codigo;
+typedef struct {
     char nome[50];
-    char cpf[15];
+    char endereco[100];
     char telefone[15];
-    char email[50];
 } Cliente;
 
-struct {
-    int numero;
-    int capacidade;
-    float diaria;
-    int disponivel;
-} Quarto;
-
-void cadastrar_cliente();
-void cadastrar_quarto();
-void cadastrar_reserva();
-void listar_clientes();
-void listar_quartos();
-void listar_reservas();
-void buscar_cliente();
-void buscar_quarto();
-void buscar_reserva();
-void excluir_cliente();
-void excluir_quarto();
-void excluir_reserva();
-void salvar_dados();
-void carregar_dados();
-void menu();
-
-int main()
-{
-    menu();
+void cadastrarCliente(Cliente *cliente) {
+    printf("Digite o nome do cliente: ");
+    fgets(cliente->nome, sizeof(cliente->nome), stdin);
+    printf("Digite o endereço do cliente: ");
+    fgets(cliente->endereco, sizeof(cliente->endereco), stdin);
+    printf("Digite o telefone do cliente: ");
+    fgets(cliente->telefone, sizeof(cliente->telefone), stdin);
 }
 
-void menu(){
-
+void exibirCliente(Cliente cliente) {
+    printf("Nome: %s", cliente.nome);
+    printf("Endereço: %s", cliente.endereco);
+    printf("Telefone: %s", cliente.telefone);
 }
 
+int main() {
+    Cliente cliente;
+    cadastrarCliente(&cliente);
+    exibirCliente(cliente);
+    return 0;
+}
