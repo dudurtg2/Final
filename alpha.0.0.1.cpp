@@ -5,7 +5,7 @@
 #include <string.h>
 
 #define MAX_CLIENTES 100
-#define MAX_QUARTOS 100
+#define MAX_QUARTOS 30
 
 typedef struct {
   char nome[50];
@@ -17,6 +17,7 @@ typedef struct {
   int numero;
   int capacidade;
   float preco;
+  bool disponivel;
 } Quarto;
 
 typedef struct {
@@ -64,7 +65,21 @@ void exibirClientes(Hotel hotel) {
   }
   menu(&hotel);
 }
-
+void exibirQuartos(Hotel hotel) {
+  for (int i = 0; i < hotel.numQuartos; i++)
+  {
+    printf("Nome: %s", hotel.quartos[i].numero);
+    if (hotel.quartos[i].disponivel) {
+      printf("Disponivel\n");
+    } else {
+      printf("Não está disponivel\n");
+    }
+    
+    
+    
+  }
+  menu(&hotel);
+}
 int main() {
   Hotel hotel;
   hotel.numClientes = 0;
