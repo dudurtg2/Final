@@ -44,7 +44,7 @@ void cadastrarCliente(Hotel *hotel) {
 
   if (!verificaCPF(hotel->clientes[hotel->numClientes].cpf)) {
     system("cls");
-    printf("CPF inv√°lido.\n");
+    printf("CPF inv·lido.\n");
     cadastrarCliente(hotel);
   }
 
@@ -52,13 +52,13 @@ void cadastrarCliente(Hotel *hotel) {
   printf("Digite o nome do cliente: ");
   gets(hotel->clientes[hotel->numClientes].nome);
 
-  printf("Digite o endere√ßo do cliente: ");
+  printf("Digite o endereÁo do cliente: ");
   gets(hotel->clientes[hotel->numClientes].endereco);
 
   printf("Digite o telefone do cliente: ");
   gets(hotel->clientes[hotel->numClientes].telefone);
 
-  printf("Deseja confirma o cadastro\n 1 - Sim \n 2 - N√£o; \n");
+  printf("Deseja confirma o cadastro\n 1 - Sim \n 2 - N„o; \n");
   scanf("%d", &Ccomfirmacao);
 
   if (Ccomfirmacao == 1) {
@@ -125,7 +125,7 @@ void cadastrarQuarto(Hotel *hotel) {
 
   int Ccomfirmacao;
 
-  printf("Digite o n√∫mero do quarto: ");
+  printf("Digite o n˙mero do quarto: ");
   scanf("%d", &hotel->quartos[hotel->numQuartos].numero);
 
   if (buscarNumeroDeQuartos(hotel->quartos[hotel->numQuartos].numero, *hotel) ==
@@ -137,10 +137,10 @@ void cadastrarQuarto(Hotel *hotel) {
   printf("Digite a capacidade do quarto: ");
   scanf("%d", &hotel->quartos[hotel->numQuartos].capacidade);
 
-  printf("Digite o pre√ßo do quarto: ");
+  printf("Digite o preÁo do quarto: ");
   scanf("%f", &hotel->quartos[hotel->numQuartos].preco);
 
-  printf("Deseja confirma o cadastro\n 1 - Sim \n 2 - N√£o; \n");
+  printf("Deseja confirma o cadastro\n 1 - Sim \n 2 - N„o; \n");
   scanf("%d", &hotel->quartos[hotel->numQuartos].capacidade);
 
   if (Ccomfirmacao == 1) {
@@ -186,7 +186,7 @@ void menu(Hotel *hotel) {
     printf("3. Cadastrar quarto\n");
     printf("4. Exibir quartos\n");
     printf("5. Sair\n");
-    printf("Escolha uma op√ß√£o: ");
+    printf("Escolha uma opÁ„o: ");
     scanf("%d", &opcao);
     fflush(stdin);
 
@@ -211,7 +211,7 @@ void menu(Hotel *hotel) {
         printf("Saindo...\n");
         break;
       default:
-        printf("Op√ß√£o inv√°lida. Tente novamente.\n");
+        printf("OpÁ„o inv·lida. Tente novamente.\n");
     }
   } while (true);
 }
