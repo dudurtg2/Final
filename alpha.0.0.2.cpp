@@ -1,11 +1,7 @@
 #include <ctype.h>
-
 #include <locale.h>
-
 #include <stdio.h>
-
 #include <stdlib.h>
-
 #include <string.h>
 
 #define MAX_CLIENTES 100
@@ -39,8 +35,6 @@ void exibirQuartos(Hotel hotel);
 int verificaCPF(char *cpf);
 void menu(Hotel *hotel);
 
-
-
 void cadastrarCliente(Hotel *hotel) {
   fflush(stdin);
   int Ccomfirmacao;
@@ -50,7 +44,7 @@ void cadastrarCliente(Hotel *hotel) {
 
   if (!verificaCPF(hotel->clientes[hotel->numClientes].cpf)) {
     system("cls");
-    printf("CPF inv·lido.\n");
+    printf("CPF inv√°lido.\n");
     cadastrarCliente(hotel);
   }
 
@@ -58,13 +52,13 @@ void cadastrarCliente(Hotel *hotel) {
   printf("Digite o nome do cliente: ");
   gets(hotel->clientes[hotel->numClientes].nome);
 
-  printf("Digite o endereÁo do cliente: ");
+  printf("Digite o endere√ßo do cliente: ");
   gets(hotel->clientes[hotel->numClientes].endereco);
 
   printf("Digite o telefone do cliente: ");
   gets(hotel->clientes[hotel->numClientes].telefone);
 
-  printf("Deseja confirma o cadastro\n 1 - Sim \n 2 - N„o; \n");
+  printf("Deseja confirma o cadastro\n 1 - Sim \n 2 - N√£o; \n");
   scanf("%d", &Ccomfirmacao);
 
   if (Ccomfirmacao == 1) {
@@ -85,13 +79,11 @@ void cadastrarCliente(Hotel *hotel) {
     menu(hotel);
   }
 }
-
-// Codigo para validar cpf, mudar nome de variaveis
+ 
 int verificaCPF(char *cpfEntrada) {
   int indice, peso, digitoVerificador1 = 0, digitoVerificador2 = 0;
 
-  if (strlen(cpfEntrada) != 11)
-    return 0;
+  if (strlen(cpfEntrada) != 11) return 0;
 
   for (indice = 0, peso = 10; indice < strlen(cpfEntrada) - 2; indice++, peso--)
     digitoVerificador1 += (cpfEntrada[indice] - 48) * peso;
@@ -102,8 +94,7 @@ int verificaCPF(char *cpfEntrada) {
   else
     digitoVerificador1 = 11 - digitoVerificador1;
 
-  if (digitoVerificador1 != (cpfEntrada[9] - 48))
-    return 0;
+  if (digitoVerificador1 != (cpfEntrada[9] - 48)) return 0;
 
   for (indice = 0, peso = 11; indice < strlen(cpfEntrada) - 1; indice++, peso--)
     digitoVerificador2 += (cpfEntrada[indice] - 48) * peso;
@@ -114,8 +105,7 @@ int verificaCPF(char *cpfEntrada) {
   else
     digitoVerificador2 = 11 - digitoVerificador2;
 
-  if (digitoVerificador2 != (cpfEntrada[10] - 48))
-    return 0;
+  if (digitoVerificador2 != (cpfEntrada[10] - 48)) return 0;
 
   return 1;
 }
@@ -135,7 +125,7 @@ void cadastrarQuarto(Hotel *hotel) {
 
   int Ccomfirmacao;
 
-  printf("Digite o n˙mero do quarto: ");
+  printf("Digite o n√∫mero do quarto: ");
   scanf("%d", &hotel->quartos[hotel->numQuartos].numero);
 
   if (buscarNumeroDeQuartos(hotel->quartos[hotel->numQuartos].numero, *hotel) ==
@@ -147,10 +137,10 @@ void cadastrarQuarto(Hotel *hotel) {
   printf("Digite a capacidade do quarto: ");
   scanf("%d", &hotel->quartos[hotel->numQuartos].capacidade);
 
-  printf("Digite o preÁo do quarto: ");
+  printf("Digite o pre√ßo do quarto: ");
   scanf("%f", &hotel->quartos[hotel->numQuartos].preco);
 
-  printf("Deseja confirma o cadastro\n 1 - Sim \n 2 - N„o; \n");
+  printf("Deseja confirma o cadastro\n 1 - Sim \n 2 - N√£o; \n");
   scanf("%d", &hotel->quartos[hotel->numQuartos].capacidade);
 
   if (Ccomfirmacao == 1) {
@@ -187,32 +177,47 @@ void exibirQuartos(Hotel hotel) {
 }
 
 void menu(Hotel *hotel) {
-  int opcao = 0;
-  fflush(stdin);
- 
-  if (hotel->numQuartos != NULL) {
-
-    exibirQuartos(*hotel);
-  }
-
-  printf("\n");
-  printf("Escolha:\n");
-  scanf("%d", &opcao);
+  int opcao;
 
   do {
-	
-    if (opcao == 1) {
-      system("cls");
-      cadastrarCliente(hotel);
-    } else if (opcao == 2) {
-      exibirClientes(*hotel);
-    } else if (opcao == 3) {
-      cadastrarQuarto(hotel); 
-	}
+    printf("\nMenu:\n");
+    printf("1. Cadastrar cliente\n");
+    printf("2. Exibir clientes\n");
+    printf("3. Cadastrar quarto\n");
+    printf("4. Exibir quartos\n");
+    printf("5. Sair\n");
+    printf("Escolha uma op√ß√£o: ");
+    scanf("%d", &opcao);
+    fflush(stdin);
+
+    switch (opcao) {
+      case 1:
+        cadastrarCliente(hotel);
+        break;
+      case 2:
+        exibirClientes(*hotel);
+        break;
+      case 3:
+        cadastrarQuarto(hotel);
+        break;
+      case 4:
+        if (hotel->numQuartos != 0) {
+          exibirQuartos(*hotel);
+        } else {
+          printf("Nenhum quarto cadastrado.\n");
+        }
+        break;
+      case 5:
+        printf("Saindo...\n");
+        break;
+      default:
+        printf("Op√ß√£o inv√°lida. Tente novamente.\n");
+    }
   } while (true);
 }
 
 int main() {
+  setlocale(LC_ALL, "Portuguese_Brazil");
   Hotel hotel;
   hotel.numClientes = 0;
   hotel.numQuartos = 0;
