@@ -18,7 +18,7 @@ typedef struct {
   int numero;
   int capacidade;
   float preco;
-  bool disponivel;
+  int disponivel;
 } Quarto;
 
 typedef struct {
@@ -34,6 +34,34 @@ void exibirClientes(Hotel hotel);
 void exibirQuartos(Hotel hotel);
 int verificaCPF(char *cpf);
 void menu(Hotel *hotel);
+
+// teste de para salva variavel - não funcionou ;-;
+/* void salvarDados(Hotel* hotel, const char* nomeArquivo) {
+  FILE* arquivo = fopen(nomeArquivo, "wb");
+  if (arquivo == NULL) {
+    perror("Erro ao abrir o arquivo");
+    return;
+  }
+  fwrite(hotel->clientes, sizeof(Cliente), hotel->numClientes, arquivo);
+  fwrite(hotel->quartos, sizeof(Quarto), hotel->numQuartos, arquivo);
+  fclose(arquivo);
+}
+
+void carregarDados(Hotel* hotel, const char* nomeArquivo) {
+  FILE* arquivo = fopen(nomeArquivo, "rb");
+  if (arquivo == NULL) {
+    perror("Erro ao abrir o arquivo");
+    return;
+  }
+  fread(hotel->clientes, sizeof(Cliente), MAX_CLIENTES, arquivo);
+  fread(hotel->quartos, sizeof(Quarto), MAX_QUARTOS, arquivo);
+  fseek(arquivo, 0, SEEK_END);
+  long tamanhoArquivo = ftell(arquivo);
+  hotel->numClientes = tamanhoArquivo / (sizeof(Cliente));
+  hotel->numQuartos = tamanhoArquivo / (sizeof(Quarto));
+  fclose(arquivo);
+}
+ */
 
 void cadastrarCliente(Hotel *hotel) {
   fflush(stdin);
@@ -79,33 +107,50 @@ void cadastrarCliente(Hotel *hotel) {
     menu(hotel);
   }
 }
- 
+
 int verificaCPF(char *cpfEntrada) {
   int indice, peso, digitoVerificador1 = 0, digitoVerificador2 = 0;
 
-  if (strlen(cpfEntrada) != 11) return 0;
+  if (strcmp(cpfEntrada, "00000000000") == 0) {
+    return 1;
+  }
 
-  for (indice = 0, peso = 10; indice < strlen(cpfEntrada) - 2; indice++, peso--)
+  if (strlen(cpfEntrada) != 11)
+    return 0;
+
+  for (indice = 0, peso = 10; indice < strlen(cpfEntrada) - 2;
+       indice++, peso--) {
     digitoVerificador1 += (cpfEntrada[indice] - 48) * peso;
+  }
 
   digitoVerificador1 %= 11;
-  if (digitoVerificador1 < 2)
+
+  if (digitoVerificador1 < 2) {
     digitoVerificador1 = 0;
-  else
+  } else {
     digitoVerificador1 = 11 - digitoVerificador1;
+  }
 
-  if (digitoVerificador1 != (cpfEntrada[9] - 48)) return 0;
+  if (digitoVerificador1 != (cpfEntrada[9] - 48)) {
+    return 0;
+  }
 
-  for (indice = 0, peso = 11; indice < strlen(cpfEntrada) - 1; indice++, peso--)
+  for (indice = 0, peso = 11; indice < strlen(cpfEntrada) - 1;
+       indice++, peso--) {
     digitoVerificador2 += (cpfEntrada[indice] - 48) * peso;
+  }
 
   digitoVerificador2 %= 11;
-  if (digitoVerificador2 < 2)
-    digitoVerificador2 = 0;
-  else
-    digitoVerificador2 = 11 - digitoVerificador2;
 
-  if (digitoVerificador2 != (cpfEntrada[10] - 48)) return 0;
+  if (digitoVerificador2 < 2) {
+    digitoVerificador2 = 0;
+  } else {
+    digitoVerificador2 = 11 - digitoVerificador2;
+  }
+
+  if (digitoVerificador2 != (cpfEntrada[10] - 48)) {
+    return 0;
+  }
 
   return 1;
 }
@@ -141,17 +186,18 @@ void cadastrarQuarto(Hotel *hotel) {
   scanf("%f", &hotel->quartos[hotel->numQuartos].preco);
 
   printf("Deseja confirma o cadastro\n 1 - Sim \n 2 - Não; \n");
-  scanf("%d", &hotel->quartos[hotel->numQuartos].capacidade);
+  scanf("%d", &Ccomfirmacao);
+  
 
   if (Ccomfirmacao == 1) {
     system("cls");
-
+    
     printf("Cadatro do quarto confirmado. \nId = %d\n", hotel->numQuartos);
-
+    hotel->quartos[hotel->numQuartos].disponivel = 1;
     hotel->numQuartos++;
-
+    
     menu(hotel);
-  } else {
+  } else if (Ccomfirmacao == 2){
     system("cls");
 
     hotel->quartos[hotel->numQuartos].numero = NULL;
@@ -164,22 +210,22 @@ void cadastrarQuarto(Hotel *hotel) {
 
 void exibirClientes(Hotel hotel) {
   for (int i = 0; i <= hotel.numClientes - 1; i++) {
-    printf("Nome: %s", hotel.clientes[i].nome);
+    printf("ID: %d - Nome: %s\n", hotel.numClientes, hotel.clientes[i].nome);
   }
   menu(&hotel);
 }
 
 void exibirQuartos(Hotel hotel) {
   for (int i = 0; i < hotel.numQuartos; i++) {
-    printf("N*:%d %s  ", hotel.quartos[i].numero,
-           hotel.quartos[i].disponivel ? "+" : "-");
+    printf("N*:%d %s  ", hotel.quartos[i].numero, (hotel.quartos[i].disponivel == 1) ? "+" : "-");
   }
 }
 
 void menu(Hotel *hotel) {
   int opcao;
-
+  // Hotel meuHotel;
   do {
+    // salvarDados(&meuHotel, "dados_hotel.dat");
     printf("\nMenu:\n");
     printf("1. Cadastrar cliente\n");
     printf("2. Exibir clientes\n");
@@ -191,36 +237,43 @@ void menu(Hotel *hotel) {
     fflush(stdin);
 
     switch (opcao) {
-      case 1:
-        cadastrarCliente(hotel);
-        break;
-      case 2:
-        exibirClientes(*hotel);
-        break;
-      case 3:
-        cadastrarQuarto(hotel);
-        break;
-      case 4:
-        if (hotel->numQuartos != 0) {
-          exibirQuartos(*hotel);
-        } else {
-          printf("Nenhum quarto cadastrado.\n");
-        }
-        break;
-      case 5:
-        printf("Saindo...\n");
-        break;
-      default:
-        printf("Opção inválida. Tente novamente.\n");
+    case 1:
+      cadastrarCliente(hotel);
+      break;
+    case 2:
+      exibirClientes(*hotel);
+      break;
+    case 3:
+      cadastrarQuarto(hotel);
+      break;
+    case 4:
+      if (hotel->numQuartos != 0) {
+        exibirQuartos(*hotel);
+      } else {
+        printf("Nenhum quarto cadastrado.\n");
+      }
+      break;
+    case 5:
+      printf("Saindo...\n");
+      break;
+    default:
+      printf("Opção inválida. Tente novamente.\n");
     }
   } while (true);
 }
 
 int main() {
+  /* Hotel meuHotel;
+  carregarDados(&meuHotel, "dados_hotel.dat"); */
   setlocale(LC_ALL, "Portuguese_Brazil");
   Hotel hotel;
-  hotel.numClientes = 0;
-  hotel.numQuartos = 0;
+  if (hotel.numClientes == NULL && hotel.numQuartos == NULL)
+  {
+    hotel.numClientes = 0;
+    hotel.numQuartos = 0;
+  }
+  
+  
   menu(&hotel);
   return 0;
 }
