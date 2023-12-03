@@ -1,7 +1,11 @@
 #include <ctype.h>
+
 #include <locale.h>
+
 #include <stdio.h>
+
 #include <stdlib.h>
+
 #include <string.h>
 
 #define MAX_CLIENTES 100
@@ -28,12 +32,20 @@ typedef struct {
   int numQuartos;
 } Hotel;
 
+/* cadastros */
 void cadastrarCliente(Hotel *hotel);
 void cadastrarQuarto(Hotel *hotel);
-void exibirClientes(Hotel hotel);
+void editarClientes(Hotel *hotel);
+/* imformaçoes */
 void exibirQuartos(Hotel hotel);
-int verificaCPF(char *cpf);
+void detalharClientes(Hotel hotel);
+void exibirClientes(Hotel hotel);
+/* Buscadores */
+int verificaCPF(char *cpfEntrada);
+int buscarNumeroDeQuartos(int Cnumero, Hotel hotel);
+/* menus */
 void menu(Hotel *hotel);
+void Clientes(Hotel hotel);
 
 // teste de para salva variavel - não funcionou ;-;
 /* void salvarDados(Hotel* hotel, const char* nomeArquivo) {
@@ -95,7 +107,7 @@ void cadastrarCliente(Hotel *hotel) {
 
     hotel->numClientes++;
 
-    menu(hotel);
+    Cliente(hotel);
   } else {
     system("cls");
 
@@ -104,8 +116,231 @@ void cadastrarCliente(Hotel *hotel) {
     *hotel->clientes[hotel->numClientes].endereco = NULL;
     *hotel->clientes[hotel->numClientes].telefone = NULL;
 
+    Cliente(hotel);
+  }
+}
+
+void cadastrarQuarto(Hotel *hotel) {
+  fflush(stdin);
+  system("cls");
+
+  int Ccomfirmacao;
+
+  printf("Digite o número do quarto: ");
+  scanf("%d", &hotel->quartos[hotel->numQuartos].numero);
+
+  if (buscarNumeroDeQuartos(hotel->quartos[hotel->numQuartos].numero, *hotel) ==
+      0) {
+    printf("Numero de quarto cadastrado\n");
     menu(hotel);
   }
+
+  printf("Digite a capacidade do quarto: ");
+  scanf("%d", &hotel->quartos[hotel->numQuartos].capacidade);
+  if (hotel->quartos[hotel->numQuartos].capacidade > 4) {
+    hotel->quartos[hotel->numQuartos].capacidade = 4;
+    printf("O maximo em um quarto é 4 pessoas.\n");
+  }
+
+  printf("Digite o preço do quarto: ");
+  scanf("%f", &hotel->quartos[hotel->numQuartos].preco);
+
+  printf("Deseja confirma o cadastro\n 1 - Sim \n 2 - Não; \n");
+  scanf("%d", &Ccomfirmacao);
+
+  if (Ccomfirmacao == 1) {
+    system("cls");
+
+    printf("Cadatro do quarto confirmado. \nId = %d\n", hotel->numQuartos);
+    hotel->quartos[hotel->numQuartos].disponivel = 1;
+    hotel->numQuartos++;
+
+    menu(hotel);
+  } else if (Ccomfirmacao == 2) {
+    system("cls");
+
+    hotel->quartos[hotel->numQuartos].numero = NULL;
+    hotel->quartos[hotel->numQuartos].preco = NULL;
+    hotel->quartos[hotel->numQuartos].capacidade = NULL;
+
+    menu(hotel);
+  }
+}
+
+void editarClientes(Hotel *hotel) {
+  int Id;
+
+  system("cls");
+
+  if (hotel->numClientes != 0) {
+    printf("Informe o Id do cliente\n ");
+    scanf("%d", &Id);
+
+    printf("Digite o cpf: ");
+    scanf("%s", hotel->clientes[Id].cpf);
+
+    if (!verificaCPF(hotel->clientes[Id].cpf)) {
+      system("cls");
+      printf("CPF inválido.\n");
+
+      cadastrarCliente(hotel);
+    }
+
+    fflush(stdin);
+
+    printf("Digite o nome do cliente: ");
+    gets(hotel->clientes[Id].nome);
+
+    printf("Digite o endereço do cliente: ");
+    gets(hotel->clientes[Id].endereco);
+
+    printf("Digite o telefone do cliente: ");
+    gets(hotel->clientes[Id].telefone);
+    
+    printf("Edição completa. o cliente do id %d, foi editado com sucesso.\n", Id);
+    system("pause");
+
+    Clientes(*hotel);
+
+  } else {
+    printf("Não a clientes registrados.\n");
+  }
+
+  system("pause");
+
+  Clientes(*hotel);
+}
+
+void exibirClientes(Hotel hotel) {
+  system("cls");
+
+  if (hotel.numClientes != 0) {
+    for (int i = 0; i < hotel.numClientes; i++) {
+      printf("ID: %d - Nome: %s\n", i, hotel.clientes[i].nome);
+    }
+  } else {
+    printf("Não a clientes registrados.\n");
+  }
+  system("pause");
+
+  Clientes(hotel);
+}
+
+void detalharClientes(Hotel hotel) {
+  int Id;
+
+  system("cls");
+
+  if (hotel.numClientes != 0) {
+
+    printf("Informe o Id do cliente\n ");
+    scanf("%d", &Id);
+
+    system("cls");
+
+    printf("Nome: %s\n", hotel.clientes[Id].nome);
+    printf("Cpf: %s\n", hotel.clientes[Id].cpf);
+    printf("Endereço: %s\n", hotel.clientes[Id].endereco);
+    printf("Telefone: %s\n", hotel.clientes[Id].telefone);
+
+    system("pause");
+
+    Clientes(hotel);
+  } else {
+    printf("Não a clientes registrados.\n");
+  }
+  system("pause");
+
+  Clientes(hotel);
+}
+
+void exibirQuartos(Hotel hotel) {
+  system("cls");
+
+  for (int i = 0; i < hotel.numQuartos; i++) {
+    printf("N*:%d %s  ", hotel.quartos[i].numero, (hotel.quartos[i].disponivel == 1) ? "+" : "-");
+  }
+}
+
+void Clientes(Hotel hotel) {
+  int opcao;
+
+  do {
+    system("cls");
+
+    printf("\nMenu:\n");
+    printf("1. Listar clientes\n");
+    printf("2. Exibir detalhe do cliente\n");
+    printf("3. cadastra clientes\n");
+    printf("4. editar clientes\n");
+    printf("3. Voltar ao menu\n");
+    printf("Escolha uma opção: ");
+
+    scanf("%d", &opcao);
+    fflush(stdin);
+
+    switch (opcao) {
+    case 1:
+      exibirClientes(hotel);
+      break;
+    case 2:
+      detalharClientes(hotel);
+      break;
+    case 3:
+      cadastrarCliente(&hotel);
+      break;
+    case 4:
+      editarClientes(&hotel);
+      break;
+    case 5:
+      system("cls");
+      printf("Voltando ao menu...\n");
+      menu(&hotel);
+      break;
+    default:
+      printf("Opção inválida. Tente novamente.\n");
+    }
+
+  } while (true);
+}
+
+void menu(Hotel *hotel) {
+  int opcao;
+  // Hotel meuHotel;
+  do {
+    // salvarDados(&meuHotel, "dados_hotel.dat");
+    printf("\nMenu:\n");
+    printf("1. Clientes\n");
+    printf("2. Cadastrar quarto\n");
+    printf("3. Exibir quartos\n");
+    printf("4. Sair\n");
+    printf("Escolha uma opção: ");
+    scanf("%d", &opcao);
+    fflush(stdin);
+
+    switch (opcao) {
+
+    case 1:
+      Clientes(*hotel);
+      break;
+    case 2:
+      cadastrarQuarto(hotel);
+      break;
+    case 3:
+      if (hotel->numQuartos != 0) {
+        exibirQuartos(*hotel);
+      } else {
+        printf("Nenhum quarto cadastrado.\n");
+      }
+      break;
+    case 4:
+      printf("Saindo...\n");
+      abort();
+      break;
+    default:
+      printf("Opção inválida. Tente novamente.\n");
+    }
+  } while (true);
 }
 
 int verificaCPF(char *cpfEntrada) {
@@ -164,116 +399,15 @@ int buscarNumeroDeQuartos(int Cnumero, Hotel hotel) {
   return Cnumero;
 }
 
-void cadastrarQuarto(Hotel *hotel) {
-  fflush(stdin);
-  system("cls");
-
-  int Ccomfirmacao;
-
-  printf("Digite o número do quarto: ");
-  scanf("%d", &hotel->quartos[hotel->numQuartos].numero);
-
-  if (buscarNumeroDeQuartos(hotel->quartos[hotel->numQuartos].numero, *hotel) ==
-      0) {
-    printf("Numero de quarto cadastrado\n");
-    menu(hotel);
-  }
-
-  printf("Digite a capacidade do quarto: ");
-  scanf("%d", &hotel->quartos[hotel->numQuartos].capacidade);
-
-  printf("Digite o preço do quarto: ");
-  scanf("%f", &hotel->quartos[hotel->numQuartos].preco);
-
-  printf("Deseja confirma o cadastro\n 1 - Sim \n 2 - Não; \n");
-  scanf("%d", &Ccomfirmacao);
-  
-
-  if (Ccomfirmacao == 1) {
-    system("cls");
-    
-    printf("Cadatro do quarto confirmado. \nId = %d\n", hotel->numQuartos);
-    hotel->quartos[hotel->numQuartos].disponivel = 1;
-    hotel->numQuartos++;
-    
-    menu(hotel);
-  } else if (Ccomfirmacao == 2){
-    system("cls");
-
-    hotel->quartos[hotel->numQuartos].numero = NULL;
-    hotel->quartos[hotel->numQuartos].preco = NULL;
-    hotel->quartos[hotel->numQuartos].capacidade = NULL;
-
-    menu(hotel);
-  }
-}
-
-void exibirClientes(Hotel hotel) {
-  for (int i = 0; i <= hotel.numClientes - 1; i++) {
-    printf("ID: %d - Nome: %s\n", hotel.numClientes, hotel.clientes[i].nome);
-  }
-  menu(&hotel);
-}
-
-void exibirQuartos(Hotel hotel) {
-  for (int i = 0; i < hotel.numQuartos; i++) {
-    printf("N*:%d %s  ", hotel.quartos[i].numero, (hotel.quartos[i].disponivel == 1) ? "+" : "-");
-  }
-}
-
-void menu(Hotel *hotel) {
-  int opcao;
-  // Hotel meuHotel;
-  do {
-    // salvarDados(&meuHotel, "dados_hotel.dat");
-    printf("\nMenu:\n");
-    printf("1. Cadastrar cliente\n");
-    printf("2. Exibir clientes\n");
-    printf("3. Cadastrar quarto\n");
-    printf("4. Exibir quartos\n");
-    printf("5. Sair\n");
-    printf("Escolha uma opção: ");
-    scanf("%d", &opcao);
-    fflush(stdin);
-
-    switch (opcao) {
-    case 1:
-      cadastrarCliente(hotel);
-      break;
-    case 2:
-      exibirClientes(*hotel);
-      break;
-    case 3:
-      cadastrarQuarto(hotel);
-      break;
-    case 4:
-      if (hotel->numQuartos != 0) {
-        exibirQuartos(*hotel);
-      } else {
-        printf("Nenhum quarto cadastrado.\n");
-      }
-      break;
-    case 5:
-      printf("Saindo...\n");
-      break;
-    default:
-      printf("Opção inválida. Tente novamente.\n");
-    }
-  } while (true);
-}
-
 int main() {
   /* Hotel meuHotel;
   carregarDados(&meuHotel, "dados_hotel.dat"); */
   setlocale(LC_ALL, "Portuguese_Brazil");
   Hotel hotel;
-  if (hotel.numClientes == NULL && hotel.numQuartos == NULL)
-  {
-    hotel.numClientes = 0;
-    hotel.numQuartos = 0;
-  }
-  
-  
+
+  hotel.numClientes = 0;
+  hotel.numQuartos = 0;
+
   menu(&hotel);
   return 0;
 }
