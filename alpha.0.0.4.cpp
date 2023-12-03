@@ -1,11 +1,7 @@
 #include <ctype.h>
-
 #include <locale.h>
-
 #include <stdio.h>
-
 #include <stdlib.h>
-
 #include <string.h>
 
 #define MAX_CLIENTES 100
@@ -37,6 +33,8 @@ typedef struct {
 }
 Hotel;
 
+/* Salva e carregar dados */
+void salvarDados(Hotel hotel);
 /* cadastros */
 void cadastrarCliente(Hotel * hotel);
 void cadastrarQuarto(Hotel * hotel);
@@ -52,43 +50,23 @@ int buscarNumeroDeQuartos(int Cnumero, Hotel hotel);
 void menu(Hotel * hotel);
 void Clientes(Hotel hotel);
 
-// teste de para salva variavel - não funcionou ;-;
-/* void salvarDados(Hotel* hotel, const char* nomeArquivo) {
-  FILE* arquivo = fopen(nomeArquivo, "wb");
-  if (arquivo == NULL) {
-    perror("Erro ao abrir o arquivo");
-    return;
-  }
-  fwrite(hotel->clientes, sizeof(Cliente), hotel->HotelIdCliente, arquivo);
-  fwrite(hotel->quartos, sizeof(Quarto), hotel->HotelIdQuartos, arquivo);
-  fclose(arquivo);
+void salvarDados(Hotel hotel) {
+    FILE *file = fopen("hotel.bin", "wb");
+
+    fwrite(&hotel, sizeof(Hotel), 1, file);
+    fclose(file);
 }
-
-void carregarDados(Hotel* hotel, const char* nomeArquivo) {
-  FILE* arquivo = fopen(nomeArquivo, "rb");
-  if (arquivo == NULL) {
-    perror("Erro ao abrir o arquivo");
-    return;
-  }
-  fread(hotel->clientes, sizeof(Cliente), MAX_CLIENTES, arquivo);
-  fread(hotel->quartos, sizeof(Quarto), MAX_QUARTOS, arquivo);
-  fseek(arquivo, 0, SEEK_END);
-  long tamanhoArquivo = ftell(arquivo);
-  hotel->HotelIdCliente = tamanhoArquivo / (sizeof(Cliente));
-  hotel->HotelIdQuartos = tamanhoArquivo / (sizeof(Quarto));
-  fclose(arquivo);
-} */
-
 
 void cadastrarCliente(Hotel * hotel) {
     fflush(stdin);
     int Ccomfirmacao;
+    system("cls");
 
     printf("Digite o cpf: ");
     scanf("%s", hotel -> clientes[hotel -> HotelIdCliente].cpf);
 
     if (!verificaCPF(hotel -> clientes[hotel -> HotelIdCliente].cpf)) {
-        system("cls");
+        
         printf("CPF inválido.\n");
         cadastrarCliente(hotel);
     }
@@ -277,8 +255,8 @@ void Clientes(Hotel hotel) {
         printf("1. Listar clientes\n");
         printf("2. Exibir detalhe do cliente\n");
         printf("3. cadastra clientes\n");
-        printf("4. editar clientes\n");
-        printf("3. Voltar ao menu\n");
+        printf("4. editar clientes\n\n");
+        printf("5. Voltar ao menu\n");
         printf("Escolha uma opção: ");
 
         scanf("%d", & opcao);
@@ -308,19 +286,17 @@ void Clientes(Hotel hotel) {
 
     } while (true);
 }
-/* void save(){
-    Hotel Seuhotel;
-    salvarDados(&Seuhotel, "dados_hotel.dat");
-} */
+
 void menu(Hotel * hotel) {
     int opcao;
-    
+    system("cls");
     do {
-        
+        salvarDados(*hotel);
+
         printf("\nMenu:\n");
         printf("1. Clientes\n");
         printf("2. Cadastrar quarto\n");
-        printf("3. Exibir quartos\n");
+        printf("3. Exibir quartos\n\n");
         printf("4. Sair\n");
         printf("Escolha uma opção: ");
         scanf("%d", & opcao);
@@ -345,8 +321,7 @@ void menu(Hotel * hotel) {
             printf("Saindo...\n");
             abort();
             break;
-        /* case 5:
-        save(); */
+        
         break;
         default:
             printf("Opção inválida. Tente novamente.\n");
@@ -414,8 +389,14 @@ int main() {
 
     hotel.HotelIdCliente = 0;
     hotel.HotelIdQuartos = 0;
-    /* carregarDados(&hotel, "dados_hotel.dat"); */
     
+    FILE *file = fopen("hotel.bin", "rb");
+    if (file == NULL) {
+        printf("Arquivo não encontrado.\n");
+    } else {
+        fread(&hotel, sizeof(Hotel), 1, file);
+        fclose(file);
+    }
 
     menu( & hotel);
     return 0;
