@@ -42,6 +42,7 @@ void salvarDados(Hotel hotel);
 void cadastrarCliente(Hotel * hotel);
 void cadastrarQuarto(Hotel * hotel);
 void editarClientes(Hotel * hotel);
+void editarQuartos(Hotel * hotel);
 /* excluir */
 void excluirClientes(Hotel * hotel);
 void excluirQuartos(Hotel * hotel);
@@ -299,6 +300,54 @@ void editarClientes(Hotel * hotel) {
     Clientes(*hotel);
 }
 
+void editarQuartos(Hotel * hotel) {
+    int Id;
+
+    system("cls");
+
+    if (hotel -> HotelIdQuartos != 0) {
+        printf("Informe o Id do cliente para editar seu cadastro\n ");
+        scanf("%d", &Id);
+
+        int nunAux;
+
+        printf("Digite o número do quarto: ");
+        scanf("%d", &nunAux);
+
+        if (buscarNumeroDeQuartos(nunAux, *hotel) == 0) {
+            printf("Numero de quarto cadastrado\n");
+            system("pause");
+            Quartos(*hotel);
+        }
+
+         hotel -> quartos[Id].numero = nunAux;
+
+        printf("Digite a capacidade do quarto: ");
+        scanf("%d", & hotel -> quartos[Id].capacidade);
+
+        if (hotel -> quartos[Id].capacidade > 4) {
+            hotel -> quartos[Id].capacidade = 4;
+            printf("O maximo em um quarto é 4 pessoas.\n");
+        }
+
+        printf("Digite o preço do quarto: ");
+        scanf("%f", & hotel -> quartos[Id].preco);
+
+
+        printf("Edição completa. o Quarto do id %d, foi editado com sucesso.\n", Id);
+        system("pause");
+
+        Quartos(*hotel);
+
+    } else {
+        printf("Não a quartos registrados.\n");
+    }
+
+    system("pause");
+
+    Quartos(*hotel);
+}
+
 void exibirClientes(Hotel hotel) {
     system("cls");
 
@@ -421,10 +470,11 @@ void Quartos(Hotel  hotel) {
 
         printf("\nMenu:\n");
         printf("1. Cadastrar quarto\n");
-        printf("2. Exibir quartos\n\n");
+        printf("2. Exibir quartos\n");
         printf("3. Excluir quarto\n");
+        printf("4. Editar quartos\n\n");
 
-        printf("4. Voltar ao menu\n");
+        printf("5. Voltar ao menu\n");
         printf("Escolha uma opção: ");
 
         scanf("%d", & opcao);
@@ -446,6 +496,9 @@ void Quartos(Hotel  hotel) {
                 excluirQuartos(&hotel);
                 break;
             case 4:
+                editarQuartos(&hotel);
+                break;
+            case 5:
                 system("cls");
                 printf("Voltando ao menu...\n");
                 menu( & hotel);
@@ -465,7 +518,7 @@ void menu(Hotel * hotel) {
 
         printf("\nMenu:\n");
         printf("1. Clientes\n");
-        printf("2. Quartos\n");
+        printf("2. Quartos\n\n");
 
         printf("3. Sair\n");
 
