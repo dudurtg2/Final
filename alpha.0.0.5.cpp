@@ -7,12 +7,6 @@
 #define MAX_CLIENTES 100
 #define MAX_QUARTOS 30
 
-
-typedef struct {
-    char senha[3][10] = {"Bora123","Bora1234","Bora12345"};
-    int adm;
-} Adminstrador;
-
 typedef struct {
     char nome[50];
     char endereco[100];
@@ -65,12 +59,9 @@ void Clientes(Hotel hotel);
 void Quartos(Hotel  hotel);
 
 void salvarDados(Hotel hotel) {
-    Adminstrador adm;
     FILE *file = fopen("hotel.bin", "wb");
-    FILE *senha = fopen("Senhas.bin", "wb");
 
     fwrite(&hotel, sizeof(Hotel), 1, file);
-    fwrite(&adm, sizeof(Adminstrador),1,senha);
     fclose(file);
 }
 
@@ -613,22 +604,19 @@ int buscarNumeroDeQuartos(int Cnumero, Hotel hotel) {
 
 int main() {
     Hotel hotel;
-    Adminstrador adm;
     setlocale(LC_ALL, "Portuguese_Brazil");
 
     hotel.HotelIdCliente = 0;
     hotel.HotelIdQuartos = 0;
     
     FILE *file = fopen("hotel.bin", "rb");
-    FILE *senha = fopen("Senha.bin", "rb");
     if (file == NULL) {
         printf("Arquivo não encontrado.\n");
     } else {
         fread(&hotel, sizeof(Hotel), 1, file);
-        fread(&adm, sizeof(Adminstrador), 1, senha);
         fclose(file);
     }
-    
+
     menu( & hotel);
     return 0;
 }
