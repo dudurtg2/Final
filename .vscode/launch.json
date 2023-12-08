@@ -8,8 +8,7 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/Users/ALUNO.SENAIESCOLA/Desktop/Nova pasta (2)/Final",
-      "program": "c:/Users/ALUNO.SENAIESCOLA/Desktop/Nova pasta (2)/Final/build/Debug/outDebug",
+
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
