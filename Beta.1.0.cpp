@@ -404,7 +404,7 @@ void editarClientes(Hotel hotel) {
                 printf("Palavra chave incorreta.\n");
                 system("pause");
                 Clientes(hotel);
-            } /* code */
+            } 
         }
 
         printf("Digite o novo cpf: ");
