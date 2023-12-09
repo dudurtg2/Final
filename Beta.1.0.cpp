@@ -164,11 +164,11 @@ void cadastrarCliente(Hotel hotel) {
     } else {
         system("cls");
 
-        *hotel.clientes[hotel.idAux].nome = NULL;
-        *hotel.clientes[hotel.idAux].cpf = NULL;
-        *hotel.clientes[hotel.idAux].endereco = NULL;
-        *hotel.clientes[hotel.idAux].telefone = NULL;
-        *hotel.clientes[hotel.idAux].palavraChave = NULL;
+        *hotel.clientes[hotel.idAux].nome = '\0';
+        *hotel.clientes[hotel.idAux].cpf = '\0';
+        *hotel.clientes[hotel.idAux].endereco = '\0';
+        *hotel.clientes[hotel.idAux].telefone = '\0';
+        *hotel.clientes[hotel.idAux].palavraChave = '\0';
 
         Clientes(hotel);
     }
@@ -242,9 +242,9 @@ void cadastrarQuarto(Hotel hotel) {
     } else if (comfirmacao == 2) {
         system("cls");
 
-        hotel.quartos[hotel.idAux].numero = -1;
-        hotel.quartos[hotel.idAux].preco = NULL;
-        hotel.quartos[hotel.idAux].capacidade = NULL;
+        hotel.quartos[hotel.idAux].numero = '\0';
+        hotel.quartos[hotel.idAux].preco = '\0';
+        hotel.quartos[hotel.idAux].capacidade = '\0';
 
         Quartos(hotel);
     }
@@ -298,12 +298,12 @@ void excluirClientes(Hotel hotel) {
         if (comfirmacao == 1) {
             system("cls");
             printf("Cadatro do cliente excluido. \nId = %d\n", hotel.idAux);
-            *hotel.clientes[cliente].nome = NULL;
-            *hotel.clientes[cliente].cpf = NULL;
-            *hotel.clientes[cliente].endereco = NULL;
-            *hotel.clientes[cliente].telefone = NULL;
+            *hotel.clientes[cliente].nome = '\0';
+            *hotel.clientes[cliente].cpf = '\0';
+            *hotel.clientes[cliente].endereco = '\0';
+            *hotel.clientes[cliente].telefone = '\0';
             hotel.clientes[cliente].existeCliente = 0;
-            hotel.clientes[cliente].quarto = -1;
+            hotel.clientes[cliente].quarto = '\0';
         } else {
             system("cls");
             Clientes(hotel);
@@ -348,9 +348,9 @@ void excluirQuartos(Hotel hotel) {
         if (comfirmacao == 1) {
             system("cls");
             printf("Cadatro do cliente excluido. \nId = %d\n", hotel.idAux);
-            hotel.quartos[numero].numero = NULL;
-            hotel.quartos[numero].preco = NULL;
-            hotel.quartos[numero].capacidade = NULL;
+            hotel.quartos[numero].numero = '\0';
+            hotel.quartos[numero].preco = '\0';
+            hotel.quartos[numero].capacidade = '\0';
             hotel.quartos[numero].existeQuarto = 0;
         } else {
             system("cls");
