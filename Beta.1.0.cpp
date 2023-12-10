@@ -68,13 +68,14 @@ void editarQuartos(Hotel hotel);
 /* excluir */
 void excluirClientes(Hotel hotel);
 void excluirQuartos(Hotel hotel);
-/* imformaçoes */
-void exibirQuartos(Hotel hotel);
+/* Historico */
 void historicoDeReservas(Hotel hotel);  /* <- Terminar */
 void historicoDiaria(Hotel hotel);      /* <- Terminar */
 void historicoDeClientes(Hotel hotel);  /* <- Terminar */
 void historicoDeQuartos(Hotel hotel);   /* <- Terminar */
 void historicoDePagamento(Hotel hotel); /* <- Terminar */
+/* imformaçoes */
+void exibirQuartos(Hotel hotel);
 void detalharClientes(Hotel hotel);
 void exibirClientes(Hotel hotel);
 /* Check-in check-out */
@@ -103,6 +104,8 @@ void salvarDados(Hotel hotel) {
 
     fclose(file);
 }
+
+/* --------------------------------------------------------------------- */
 
 void cadastrarCliente(Hotel hotel) {
     fflush(stdin);
@@ -508,6 +511,8 @@ void editarQuartos(Hotel hotel) {
     Quartos(hotel);
 }
 
+/* --------------------------------------------------------------------- */
+
 void exibirClientes(Hotel hotel) {
     system("cls");
     if (hotel.HotelIdCliente != 1) {
@@ -743,6 +748,8 @@ void reservaUmQuarto(Hotel hotel) {
     Resevas(hotel);
 }
 
+/* --------------------------------------------------------------------- */
+
 void historicoDeQuartos(Hotel hotel) {
     system("cls");
     for (int i = 0; i < hotel.Contador[0]; i++) {
@@ -787,6 +794,8 @@ void historicoDePagamento(Hotel hotel) {
     system("pause");
     historicoMenu(hotel);
 }
+
+/* --------------------------------------------------------------------- */
 
 void detalharClientes(Hotel hotel) {
     int Id;
@@ -848,6 +857,36 @@ void exibirQuartos(Hotel hotel) {
     }
     system("pause");
 }
+
+void Login(Hotel hotel) {
+    char senha[20];
+
+    system("cls");
+    printf("Você tem %d tentativas\n", tentativasLogin);
+    printf("Digite a senha de administrador: ");
+    scanf("%19s", senha);
+
+    if (strcmp(hotel.adm.senha[0], senha) == 0 || strcmp(hotel.adm.senha[1], senha) == 0 || strcmp(hotel.adm.senha[2], senha) == 0) {
+        system("cls");
+        hotel.adm.adm = 1;
+        printf("Login de administrador realizado com sucesso.\n");
+        system("pause");
+        menu(hotel);
+    } else {
+        system("cls");
+        printf("Senha incorreta.\n");
+        if (tentativasLogin == 0) {
+            tentativasLogin = 3;
+            printf("Você excedeu o limite de tentativas.\n");
+            system("pause");
+            menu(hotel);
+        }
+        tentativasLogin--;
+        Login(hotel);
+    }
+}
+
+/* --------------------------------------------------------------------- */
 
 void Clientes(Hotel hotel) {
     int opcao;
@@ -995,9 +1034,9 @@ void Resevas(Hotel hotel) {
         salvarDados(hotel);
 
         printf("\nMenu de reservas:\n");
-        printf("1. reservar quartos\n");
+        printf("1. alugar quartos\n");
         printf("2. pagar quartos\n");
-
+        printf("3. reservar quartos\n");
         printf("\n4. Voltar ao menu\n");
         printf("Escolha uma opção: ");
 
@@ -1012,7 +1051,7 @@ void Resevas(Hotel hotel) {
                 checkOnQuarto(hotel);
                 break;
             case 3:
-
+                reservaUmQuarto(hotel);
                 break;
             case 4:
                 system("cls");
@@ -1024,34 +1063,6 @@ void Resevas(Hotel hotel) {
         }
 
     } while (true);
-}
-
-void Login(Hotel hotel) {
-    char senha[20];
-
-    system("cls");
-    printf("Você tem %d tentativas\n", tentativasLogin);
-    printf("Digite a senha de administrador: ");
-    scanf("%19s", senha);
-
-    if (strcmp(hotel.adm.senha[0], senha) == 0 || strcmp(hotel.adm.senha[1], senha) == 0 || strcmp(hotel.adm.senha[2], senha) == 0) {
-        system("cls");
-        hotel.adm.adm = 1;
-        printf("Login de administrador realizado com sucesso.\n");
-        system("pause");
-        menu(hotel);
-    } else {
-        system("cls");
-        printf("Senha incorreta.\n");
-        if (tentativasLogin == 0) {
-            tentativasLogin = 3;
-            printf("Você excedeu o limite de tentativas.\n");
-            system("pause");
-            menu(hotel);
-        }
-        tentativasLogin--;
-        Login(hotel);
-    }
 }
 
 void historicoMenu(Hotel hotel) {
@@ -1212,6 +1223,8 @@ void menu(Hotel hotel) {
     } while (true);
 }
 
+/* --------------------------------------------------------------------- */
+
 int verificaCPF(char *cpfEntrada) {
     int indice, peso, digitoVerificador1 = 0, digitoVerificador2 = 0;
 
@@ -1292,6 +1305,8 @@ int adicionarNoQuarto(int numero, int cliente, Hotel hotel) {
     }
     return 0;
 }
+
+/* --------------------------------------------------------------------- */
 
 int main() {
     Hotel hotel;
