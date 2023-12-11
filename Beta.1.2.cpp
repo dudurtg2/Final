@@ -129,7 +129,7 @@ void cadastrarCliente(Hotel hotel) {
 
     if (!verificaCPF(hotel.clientes[hotel.idAux].cpf)) {
         system("cls");
-        printf("CPF inv�lido.\n");
+        printf("CPF inválido.\n");
         cadastrarCliente(hotel);
     }
 
