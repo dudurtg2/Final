@@ -157,11 +157,11 @@ void cadastrarCliente(Hotel hotel) {
         hotel.clientes[hotel.idAux].existeCliente = 1;
         hotel.clientes[hotel.idAux].temQuarto = 0;
 
-        strcpy(nome, hotel.clientes[hotel.idAux].nome);
-        strcpy(endereco, hotel.clientes[hotel.idAux].endereco);
-        strcpy(telefone, hotel.clientes[hotel.idAux].telefone);
-        strcpy(palavrachave, hotel.clientes[hotel.idAux].palavraChave);
-        strcpy(cpf, hotel.clientes[hotel.idAux].cpf);
+        strcpy(hotel.clientes[hotel.idAux].nome, nome);
+        strcpy(hotel.clientes[hotel.idAux].endereco, endereco);
+        strcpy(hotel.clientes[hotel.idAux].telefone, telefone);
+        strcpy(hotel.clientes[hotel.idAux].palavraChave, palavrachave);
+        strcpy(hotel.clientes[hotel.idAux].cpf, cpf);
 
         char buffer[100];
         sprintf(buffer, "ID do cliente %d / CPF %s / Nome %s / Data %d/%d/%d", hotel.idAux, hotel.clientes[hotel.idAux].cpf, hotel.clientes[hotel.idAux].nome, hotel.tempo.tm_mday, hotel.tempo.tm_mon, hotel.tempo.tm_year);
@@ -558,21 +558,6 @@ void editarQuartos(Hotel hotel) {
 
 /* --------------------------------------------------------------------- */
 
-void exibirClientes(Hotel hotel) {
-    system("cls");
-    if (hotel.HotelIdCliente != 1) {
-        for (int i = 1; i < hotel.HotelIdCliente; i++) {
-            if (hotel.clientes[i].existeCliente != 0) {
-                printf("ID: %d - Nome: %s\n", i, hotel.clientes[i].nome);
-            }
-        }
-    } else {
-        printf("Não a clientes registrados.\n");
-    }
-    system("pause");
-
-    Clientes(hotel);
-}
 
 void checkInQuarto(Hotel hotel) {
     int numero;
@@ -895,6 +880,21 @@ void historicoDePagamento(Hotel hotel) {
 
 /* --------------------------------------------------------------------- */
 
+void exibirClientes(Hotel hotel) {
+    system("cls");
+    if (hotel.HotelIdCliente != 1) {
+        for (int i = 1; i < hotel.HotelIdCliente; i++) {
+            if (hotel.clientes[i].existeCliente != 0) {
+                printf("ID: %d - Nome: %s\n", i, hotel.clientes[i].nome);
+            }
+        }
+    } else {
+        printf("Não a clientes registrados.\n");
+    }
+    system("pause");
+
+    Clientes(hotel);
+}
 /* Adcionar mais coisas */
 void detalharClientes(Hotel hotel) {
     int cliente;
@@ -943,11 +943,16 @@ void exibirQuartos(Hotel hotel) {
             if (hotel.quartos[i].existeQuarto != 0) {
                 printf("===========================\n");
                 printf("ID: %d - Numero: %d - Capacidade:%d - Preço:%.2f\n", i, hotel.quartos[i].numero, hotel.quartos[i].capacidade, hotel.quartos[i].preco);
-                for (int j = 0; j < hotel.quartos[i].capacidade; j++) {
-                    if (hotel.adm.adm == 1) {
-                        printf("Clientes: %s\n", hotel.clientes[hotel.quartos[i].idCliente[j]].nome);
+                if (hotel.quartos[i].reservado == 0) {
+                   for (int j = 0; j < hotel.quartos[i].capacidade; j++) {
+                        if (hotel.adm.adm == 1) {
+                            printf("Clientes: %s\n", hotel.clientes[hotel.quartos[i].idCliente[j]].nome);
+                        }
                     }
+                } else {
+                    printf("Quarto reservado para %s.", hotel.clientes[hotel.quartos[i].Idreserva].nome);
                 }
+
                 printf("===========================\n");
             }
         }
