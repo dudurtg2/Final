@@ -696,7 +696,7 @@ void checkOutQuarto(Hotel hotel) {
 
   if (cliente <= hotel.HotelIdCliente) {
     if (hotel.clientes[cliente].temQuarto == 1) {
-      int possicao = procurarClienteNoQuarto(hotel.clientes[cliente].quarto, cliente, hotel);
+      int possicao = procurarClienteNoQuarto(hotel.clientes[cliente].quartoC, cliente, hotel);
 
       if (possicao == 5) {
         printf("cliente não estar em um quarto.\n");
@@ -704,7 +704,7 @@ void checkOutQuarto(Hotel hotel) {
         Resevas(hotel);
       }
 
-      int preco = ((hotel.tempo.tm_yday - hotel.clientes[cliente].tempoNoQuarto) * hotel.quartos[hotel.clientes[cliente].quarto].preco) + hotel.quartos[hotel.clientes[cliente].quarto].preco;
+      int preco = ((hotel.tempo.tm_yday - hotel.clientes[cliente].tempoNoQuarto) * hotel.quartos[hotel.clientes[cliente].quartoC].preco) + hotel.quartos[hotel.clientes[cliente].quartoC].preco;
 
       int dias = (hotel.tempo.tm_yday - hotel.clientes[cliente].tempoNoQuarto) + 1;
 
@@ -714,15 +714,15 @@ void checkOutQuarto(Hotel hotel) {
 
       if (pago == 1) {
         char buffer[200];
-        sprintf(buffer, "Numero do quarto: %d / Preço pago: %.2f / Data %d/%d/%d / Dias hospedados: %d / Nome: %s / CPf: %s", hotel.quartos[hotel.clientes[cliente].quarto].numero, hotel.quartos[hotel.clientes[cliente].quarto].preco, hotel.tempo.tm_mday, hotel.tempo.tm_mon, hotel.tempo.tm_year, dias, hotel.clientes[cliente].nome, hotel.clientes[cliente].cpf);
+        sprintf(buffer, "Numero do quarto: %d / Preço pago: %.2f / Data %d/%d/%d / Dias hospedados: %d / Nome: %s / CPf: %s", hotel.quartos[hotel.clientes[cliente].quartoC].numero, hotel.quartos[hotel.clientes[cliente].quartoC].preco, hotel.tempo.tm_mday, hotel.tempo.tm_mon, hotel.tempo.tm_year, dias, hotel.clientes[cliente].nome, hotel.clientes[cliente].cpf);
         strcpy(hotel.historico[hotel.Contador[0]], buffer);
         hotel.Contador[3]++;
 
         hotel.clientes[cliente].temQuarto = 0;
-        hotel.quartos[hotel.clientes[cliente].quarto].quartoVago[possicao] = 0;
-        hotel.quartos[hotel.clientes[cliente].quarto].idCliente[possicao] = 0;
+        hotel.quartos[hotel.clientes[cliente].quartoC].quartoVago[possicao] = 0;
+        hotel.quartos[hotel.clientes[cliente].quartoC].idCliente[possicao] = 0;
         hotel.clientes[cliente].reservadoC = 0;
-        hotel.quartos[hotel.clientes[cliente].quarto].reservado = 0;
+        hotel.quartos[hotel.clientes[cliente].quartoC].reservado = 0;
 
 
         printf("O Cliente pagou %d\n", preco);
@@ -1426,7 +1426,7 @@ int main() {
     hotel.Contador[i] = 0;
   }
 
-  FILE *file = fopen("hotel.bin", "rb");
+  /* FILE *file = fopen("hotel.bin", "rb");
 
   if (file == NULL) {
     printf("Arquivo não encontrado.\n");
@@ -1434,7 +1434,7 @@ int main() {
     fread(&hotel, sizeof(Hotel), 1, file);
 
     fclose(file);
-  }
+  } */
 
   menu(hotel);
   return 0;
