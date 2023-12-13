@@ -50,7 +50,6 @@ typedef struct {
   Cliente clientes[MAX_CLIENTES];
   Quarto quartos[MAX_QUARTOS];
   Adminstrador adm;
-  tm tempo;
   int HotelIdCliente;
   int Hotelquartos;
   int Contador[5];
@@ -111,6 +110,16 @@ void salvarDados(Hotel hotel) {
 void cadastrarCliente(Hotel hotel) {
   fflush(stdin);
 
+  time_t tempo;
+  struct tm *tempoReal;
+
+  time(&tempo);
+  tempoReal = localtime(&tempo);
+
+  int diaDoMes = tempoReal->tm_mday;
+  int mes = tempoReal->tm_mon + 1;
+  int ano = tempoReal->tm_year + 1900;
+
   int comfirmacao;
   char nome[50];
   char telefone[20];
@@ -165,23 +174,22 @@ void cadastrarCliente(Hotel hotel) {
     strcpy(hotel.clientes[hotel.idAux].Chave, senha);
  
     char buffer[100];
-    sprintf(buffer, "ID do cliente %d / CPF %s / Nome %s / Data %d/%d/%d\n", hotel.idAux, hotel.clientes[hotel.idAux].cpf, hotel.clientes[hotel.idAux].nome, hotel.tempo.tm_mday, hotel.tempo.tm_mon, hotel.tempo.tm_year);
+    sprintf(buffer, "ID do cliente %d / CPF %s / Nome %s / Data %d/%d/%d\n", hotel.idAux, hotel.clientes[hotel.idAux].cpf, hotel.clientes[hotel.idAux].nome, diaDoMes, mes, ano);
     strcpy(hotel.historico[hotel.Contador[1]], buffer);
     hotel.Contador[1]++;
 
     if (hotel.idAux == hotel.HotelIdCliente) {
       hotel.HotelIdCliente++;
-      printf("ID do cliente %d / CPF %s / Nome %s / Data do cadastro %d/%d/%d\n", hotel.idAux, hotel.clientes[hotel.idAux].cpf, hotel.clientes[hotel.idAux].nome, hotel.tempo.tm_mday, hotel.tempo.tm_mon, hotel.tempo.tm_year);
+      printf("ID do cliente %d / CPF %s / Nome %s / Data do cadastro %d/%d/%d\n", hotel.idAux, hotel.clientes[hotel.idAux].cpf, hotel.clientes[hotel.idAux].nome, diaDoMes, mes, ano);
       system("pause");
       sleep(3);
       salvarDados(hotel);
       Clientes(hotel);
 
     } else {
-      printf("ID do cliente %d / CPF %s / Nome %s / Data do cadastro %d/%d/%d\n", hotel.idAux, hotel.clientes[hotel.idAux].cpf, hotel.clientes[hotel.idAux].nome, hotel.tempo.tm_mday, hotel.tempo.tm_mon, hotel.tempo.tm_year);
+      printf("ID do cliente %d / CPF %s / Nome %s / Data do cadastro %d/%d/%d\n", hotel.idAux, hotel.clientes[hotel.idAux].cpf, hotel.clientes[hotel.idAux].nome, diaDoMes, mes, ano);
       system("pause");
-      sleep(3);
-      salvarDados(hotel);
+      
       Clientes(hotel);
     }
   } else {
@@ -193,6 +201,16 @@ void cadastrarCliente(Hotel hotel) {
 void cadastrarQuarto(Hotel hotel) {
   fflush(stdin);
   system("cls");
+
+  time_t tempo;
+  struct tm *tempoReal;
+
+  time(&tempo);
+  tempoReal = localtime(&tempo);
+
+  int diaDoMes = tempoReal->tm_mday;
+  int mes = tempoReal->tm_mon + 1;
+  int ano = tempoReal->tm_year + 1900;
 
   int comfirmacao;
   int numero;
@@ -249,7 +267,7 @@ void cadastrarQuarto(Hotel hotel) {
     }
 
     char buffer[100];
-    sprintf(buffer, "Numero do quarto %d / Capacidade %d / Preço %.2f / Data %d/%d/%d", numero, hotel.quartos[hotel.idAux].capacidade, hotel.quartos[hotel.idAux].preco, hotel.tempo.tm_mday, hotel.tempo.tm_mon, hotel.tempo.tm_year);
+    sprintf(buffer, "Numero do quarto %d / Capacidade %d / Preço %.2f / Data %d/%d/%d", numero, hotel.quartos[hotel.idAux].capacidade, hotel.quartos[hotel.idAux].preco, diaDoMes, mes, ano);
     strcpy(hotel.historico[hotel.Contador[0]], buffer);
     hotel.Contador[0]++;
 
@@ -578,6 +596,17 @@ void checkInQuarto(Hotel hotel) {
   int quarto;
   int cliente;
 
+  time_t tempo;
+  struct tm *tempoReal;
+
+  time(&tempo);
+  tempoReal = localtime(&tempo);
+
+  int diaDoMes = tempoReal->tm_mday;
+  int mes = tempoReal->tm_mon + 1;
+  int ano = tempoReal->tm_year + 1900;
+  int diaDoAno = tempoReal->tm_yday + 1;
+
   system("cls");
 
   printf("Digite o numero do quarto: ");
@@ -640,10 +669,10 @@ void checkInQuarto(Hotel hotel) {
         hotel.quartos[quarto].temCliente = 1;
         hotel.clientes[cliente].quartoC = quarto;
         hotel.clientes[cliente].temQuarto = 1;
-        hotel.clientes[cliente].tempoNoQuarto = hotel.tempo.tm_yday;
+        hotel.clientes[cliente].tempoNoQuarto = diaDoAno;
 
         char buffer[100];
-        sprintf(buffer, "Numero do quarto %d / Nome do cliente: %s / Preço do quarto %.2f / Data %d/%d/%d", hotel.quartos[quarto].numero, hotel.clientes[cliente].nome, hotel.quartos[quarto].preco, hotel.tempo.tm_mday, hotel.tempo.tm_mon, hotel.tempo.tm_year);
+        sprintf(buffer, "Numero do quarto %d / Nome do cliente: %s / Preço do quarto %.2f / Data %d/%d/%d", hotel.quartos[quarto].numero, hotel.clientes[cliente].nome, hotel.quartos[quarto].preco, diaDoMes, mes, ano);
         strcpy(hotel.historico[hotel.Contador[2]], buffer);
         hotel.Contador[2]++;
 
@@ -671,10 +700,10 @@ void checkInQuarto(Hotel hotel) {
     hotel.quartos[quarto].temCliente = 1;
     hotel.clientes[cliente].quartoC = quarto;
     hotel.clientes[cliente].temQuarto = 1;
-    hotel.clientes[cliente].tempoNoQuarto = hotel.tempo.tm_yday;
+    hotel.clientes[cliente].tempoNoQuarto = diaDoAno;
 
     char buffer[100];
-    sprintf(buffer, "Numero do quarto %d / Nome do cliente: %s / Preço do quarto %.2f / Data %d/%d/%d", hotel.quartos[quarto].numero, hotel.clientes[cliente].nome, hotel.quartos[quarto].preco, hotel.tempo.tm_mday, hotel.tempo.tm_mon, hotel.tempo.tm_year);
+    sprintf(buffer, "Numero do quarto %d / Nome do cliente: %s / Preço do quarto %.2f / Data %d/%d/%d", hotel.quartos[quarto].numero, hotel.clientes[cliente].nome, hotel.quartos[quarto].preco, diaDoMes, mes, ano);
     strcpy(hotel.historico[hotel.Contador[2]], buffer);
     hotel.Contador[2]++;
 
@@ -694,6 +723,17 @@ void checkOutQuarto(Hotel hotel) {
 
   int cliente;
   int pago;
+
+  time_t tempo;
+  struct tm *tempoReal;
+
+  time(&tempo);
+  tempoReal = localtime(&tempo);
+
+  int diaDoMes = tempoReal->tm_mday;
+  int mes = tempoReal->tm_mon + 1;
+  int ano = tempoReal->tm_year + 1900;
+  int diaDoAno = tempoReal->tm_yday + 1;
 
   system("cls");
 
@@ -728,9 +768,9 @@ void checkOutQuarto(Hotel hotel) {
         Resevas(hotel);
       }
 
-      int preco = ((hotel.tempo.tm_yday - hotel.clientes[cliente].tempoNoQuarto) * hotel.quartos[hotel.clientes[cliente].quartoC].preco) + hotel.quartos[hotel.clientes[cliente].quartoC].preco;
+      int preco = ((diaDoAno - hotel.clientes[cliente].tempoNoQuarto) * hotel.quartos[hotel.clientes[cliente].quartoC].preco) + hotel.quartos[hotel.clientes[cliente].quartoC].preco;
 
-      int dias = (hotel.tempo.tm_yday - hotel.clientes[cliente].tempoNoQuarto) + 1;
+      int dias = (diaDoAno - hotel.clientes[cliente].tempoNoQuarto) + 1;
 
       printf("O cliente %s, precisar pagar %d de um periodo de %d dias no quarto.\n", hotel.clientes[cliente].nome, preco, dias);
       printf("1 - Pagou | 2 não pagou\n");
@@ -738,7 +778,7 @@ void checkOutQuarto(Hotel hotel) {
 
       if (pago == 1) {
         char buffer[200];
-        sprintf(buffer, "Numero do quarto: %d / Preço pago: %.2f / Data %d/%d/%d / Dias hospedados: %d / Nome: %s / CPf: %s", hotel.quartos[hotel.clientes[cliente].quartoC].numero, hotel.quartos[hotel.clientes[cliente].quartoC].preco, hotel.tempo.tm_mday, hotel.tempo.tm_mon, hotel.tempo.tm_year, dias, hotel.clientes[cliente].nome, hotel.clientes[cliente].cpf);
+        sprintf(buffer, "Numero do quarto: %d / Preço pago: %.2f / Data %d/%d/%d / Dias hospedados: %d / Nome: %s / CPf: %s", hotel.quartos[hotel.clientes[cliente].quartoC].numero, hotel.quartos[hotel.clientes[cliente].quartoC].preco, diaDoMes, mes, ano, dias, hotel.clientes[cliente].nome, hotel.clientes[cliente].cpf);
         strcpy(hotel.historico[hotel.Contador[0]], buffer);
         hotel.Contador[3]++;
 
@@ -768,6 +808,17 @@ void checkOutQuarto(Hotel hotel) {
 }
 
 void reservaUmQuarto(Hotel hotel) {
+  time_t tempo;
+  struct tm *tempoReal;
+
+  time(&tempo);
+  tempoReal = localtime(&tempo);
+
+  int diaDoMes = tempoReal->tm_mday;
+  int mes = tempoReal->tm_mon + 1;
+  int ano = tempoReal->tm_year + 1900;
+
+
   int cliente, quarto;
 
   printf("Digite o Id do cliente para reserva um quarto.\n");
@@ -830,7 +881,7 @@ void reservaUmQuarto(Hotel hotel) {
   }
 
   char buffer[100];
-  sprintf(buffer, "Numero do quarto %d / Nome do cliente: %s / Preço do quarto %.2f / Data da reserva %d/%d/%d", hotel.quartos[quarto].numero, hotel.clientes[cliente].nome, hotel.quartos[quarto].preco, hotel.tempo.tm_mday, hotel.tempo.tm_mon, hotel.tempo.tm_year);
+  sprintf(buffer, "Numero do quarto %d / Nome do cliente: %s / Preço do quarto %.2f / Data da reserva %d/%d/%d", hotel.quartos[quarto].numero, hotel.clientes[cliente].nome, hotel.quartos[quarto].preco, diaDoMes, mes, ano);
   strcpy(hotel.historico[hotel.Contador[2]], buffer);
   hotel.Contador[4]++;
 
@@ -899,8 +950,6 @@ void exibirClientes(Hotel hotel) {
   system("cls");
   if (hotel.HotelIdCliente != 0) {
     for (int i = 1; i < hotel.HotelIdCliente; i++) {
-      printf("ID: %d - Nome: %d\n", i, hotel.clientes[i].existeCliente);
-      system("pause");
       if (hotel.clientes[i].existeCliente == 1) {
         printf("ID: %d - Nome: %s\n", i, hotel.clientes[i].nome);
       }
