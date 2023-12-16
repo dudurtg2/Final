@@ -669,7 +669,7 @@ void checkInQuarto(Hotel hotel) {
         Resevas(hotel);
     }
 
-    printf("Digite o id do cliente: ");
+    printf(CIANO"Digite o id do cliente: "RESET);
     scanf("%d", &cliente);
 
     if (cliente > hotel.HotelIdCliente) {
@@ -853,7 +853,7 @@ void reservaUmQuarto(Hotel hotel) {
     int mes = tempoReal->tm_mon + 1;
     int ano = tempoReal->tm_year + 1900;
 
-    int cliente, quarto;
+    int cliente, Iquarto, quarto;
 
     printf(CIANO "Digite o Id do cliente para reserva um quarto: " RESET);
     scanf("%d", &cliente);
@@ -885,10 +885,10 @@ void reservaUmQuarto(Hotel hotel) {
     }
 
     printf(CIANO "Digite o numero do quarto: " RESET);
-    scanf("%d", &quarto);
+    scanf("%d", &Iquarto);
 
-    if (buscarIdDoQuarto(quarto, hotel) != 0) {
-        quarto = buscarIdDoQuarto(quarto, hotel);
+    if (buscarIdDoQuarto(Iquarto, hotel) != 0) {
+        quarto = buscarIdDoQuarto(Iquarto, hotel);
 
         if (quarto > hotel.Hotelquartos) {
             printf(VERMELHO "O quarto não existe.\n" RESET);
@@ -1067,25 +1067,26 @@ void detalharClientes(Hotel hotel) {
 void exibirQuartos(Hotel hotel) {
     system("cls");
 
+            printf("=========================================================\n");
     for (int i = 0; i < hotel.Hotelquartos; i++) {
         if (hotel.quartos[i].existeQuarto == 1) {
-            printf("===========================\n");
-            printf("ID: %d - Numero: %d - Capacidade:%d - Preço:%.2f\n", i, hotel.quartos[i].numero, hotel.quartos[i].capacidade, hotel.quartos[i].preco);
+            printf(CIANO"ID: %d - Numero: %d - Capacidade: %d - Preço: %.2f\n"RESET, i, hotel.quartos[i].numero, hotel.quartos[i].capacidade, hotel.quartos[i].preco);
+            printf(CIANO"Clientes: "RESET);
             if (hotel.quartos[i].reservado == 0) {
                 for (int j = 0; j < hotel.quartos[i].capacidade; j++) {
                     if (hotel.adm.adm == 1) {
-                        printf("Clientes: %s\n", hotel.clientes[hotel.quartos[i].idCliente[j]].nome);
+                        printf(" %s ", hotel.clientes[hotel.quartos[i].idCliente[j]].nome);
                     }
                 }
             } else {
-                printf("Quarto reservado para %s.", hotel.clientes[hotel.quartos[i].Idreserva].nome);
+                printf(AMARELO"Quarto reservado para %s.\n"RESET, hotel.clientes[hotel.quartos[i].Idreserva].nome);
             }
 
-            printf("===========================\n");
+            printf("\n=========================================================\n");
         }
     }
-
     system("pause");
+    system("cls");
 }
 
 void Login(Hotel hotel) {
