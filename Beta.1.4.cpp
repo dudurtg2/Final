@@ -1,3 +1,4 @@
+#include <conio.h>
 #include <ctype.h>
 #include <locale.h>
 #include <stdio.h>
@@ -9,6 +10,14 @@
 #define MAX_CLIENTES 100
 #define MAX_QUARTOS 30
 #define MAX_HISTORICO 1000
+
+#define RESET "\x1b[0m"
+#define VERMELHO "\x1b[31m"
+#define AMARELO "\x1b[33m"
+#define VERDE "\x1b[32m"
+#define CIANO "\x1b[36m"
+#define AZUL "\x1b[34m"
+#define PRETO "\x1b[30m"
 
 int tentativasLogin = 3;
 
@@ -135,35 +144,35 @@ void cadastrarCliente(Hotel hotel) {
         }
     }
 
-    printf("Digite o cpf: ");
+    printf(CIANO "Digite o cpf: " RESET);
     scanf("%12s", cpf);
 
     if (!verificaCPF(cpf)) {
         system("cls");
-        printf("CPF inválido.\n");
+        printf(AMARELO "CPF inválido.\n" RESET);
         cadastrarCliente(hotel);
     }
 
     fflush(stdin);
-    printf("Digite o nome do cliente: ");
+    printf(CIANO "Digite o nome do cliente: " RESET);
     gets(nome);
 
-    printf("Digite o endereço do cliente: ");
+    printf(CIANO "Digite o endereço do cliente: " RESET);
     gets(endereco);
 
-    printf("Digite o telefone do cliente: ");
+    printf(CIANO "Digite o telefone do cliente: " RESET);
     scanf("%19s", telefone);
 
-    printf("Digite a palavra chave: ");
+    printf(CIANO "Digite a palavra chave: " RESET);
     scanf("%s", senha);
 
     fflush(stdin);
-    printf("Deseja confirma o cadastro\n 1 - Sim / 2 - Não \n");
+    printf(CIANO "Deseja confirma o cadastro\n" VERDE " 1 - Sim " RESET "/" VERMELHO " 2 - Não \n" RESET);
     scanf("%d", &comfirmacao);
 
     if (comfirmacao == 1) {
         system("cls");
-        printf("Cadatro do cliente confirmado. ", hotel.idAux);
+        printf(VERDE "Cadatro do cliente confirmado. " RESET, hotel.idAux);
         system("pause");
 
         hotel.clientes[hotel.idAux].existeCliente = 1;
@@ -228,36 +237,36 @@ void cadastrarQuarto(Hotel hotel) {
         }
     }
 
-    printf("Digite o número do quarto: ");
+    printf(CIANO "Digite o número do quarto: " RESET);
     scanf("%d", &numero);
 
     if (buscarNumeroDeQuartos(numero, hotel) == 0) {
-        printf("Número de quarto cadastrado: ");
+        printf(CIANO "Número de quarto cadastrado: " RESET);
         system("pause");
         Quartos(hotel);
     }
 
-    printf("Digite a capacidade do quarto: ");
+    printf(CIANO "Digite a capacidade do quarto: " RESET);
     scanf("%d", &capacidade);
 
     if (capacidade > 4) {
         capacidade = 4;
-        printf("O maximo em um quarto é 4 pessoas.\n");
+        printf(AMARELO "O maximo em um quarto é 4 pessoas.\n" RESET);
     } else if (capacidade == 0) {
         capacidade = 1;
-        printf("O minimo em um quarto é 1 pessoas.\n");
+        printf(AMARELO "O minimo em um quarto é 1 pessoas.\n" RESET);
     }
 
-    printf("Digite o preço do quarto: ");
+    printf(CIANO "Digite o preço do quarto: " RESET);
     scanf("%f", &preco);
 
-    printf("Deseja confirma o cadastro\n 1 - Sim \n 2 - Não; \n");
+    printf(CIANO "Deseja confirma o cadastro\n" VERDE " 1 - Sim " RESET "/" VERMELHO " 2 - Não \n" RESET);
     scanf("%d", &comfirmacao);
 
     if (comfirmacao == 1) {
         system("cls");
 
-        printf("Cadatro do quarto confirmado. \nId = %d\n", hotel.idAux);
+        printf(VERDE "Cadatro do quarto confirmado. \nId = %d\n" RESET, hotel.idAux);
 
         hotel.quartos[hotel.idAux].numero = numero;
         hotel.quartos[hotel.idAux].preco = preco;
@@ -294,62 +303,74 @@ void cadastrarQuarto(Hotel hotel) {
 }
 
 void excluirClientes(Hotel hotel) {
-    int cliente, comfirmacao;
+    int cliente;
+    int comfirmacao;
+    int i = 0;
+    char ch;
 
     system("cls");
 
     if (hotel.HotelIdCliente != 0) {
-        printf("Informe o Id do cliente: ");
+        printf(CIANO "Informe o Id do cliente: " RESET);
         scanf("%d", &cliente);
 
         if (cliente > hotel.HotelIdCliente) {
-            printf("O cliente não existe.\n");
+            printf(VERMELHO "O cliente não existe.\n" RESET);
             system("pause");
             Clientes(hotel);
         }
 
         if (cliente == 0) {
-            printf("O ID 0 não pode ser excluido.\n");
+            printf(VERMELHO "O ID 0 não pode ser excluido.\n" RESET);
             system("pause");
             Clientes(hotel);
         }
 
         if (hotel.clientes[cliente].temQuarto == 1) {
-            printf("O ID %d não pode ser excluido, pois está registrado em um quarto.\n", cliente);
+            printf(AMARELO "O ID %d não pode ser excluido, pois está registrado em um quarto.\n" RESET, cliente);
             system("pause");
             Clientes(hotel);
         }
 
         if (hotel.clientes[cliente].reservadoC == 1) {
-            printf("O ID %d não pode ser excluido, pois tem uma reserva.\n", cliente);
+            printf(AMARELO "O ID %d não pode ser excluido, pois tem uma reserva.\n" RESET, cliente);
             system("pause");
             Clientes(hotel);
         }
 
         if (hotel.clientes[cliente].existeCliente == 0) {
-            printf("O ID %d não pode ser excluido. pois não existe mais.\n", cliente);
+            printf(AMARELO "O ID %d não pode ser excluido. pois não existe mais.\n" RESET, cliente);
             system("pause");
             Clientes(hotel);
         }
 
         if (hotel.adm.adm == 0) {
             char senha[20];
-            printf("Informe a palavra chave: ");
-            scanf("%s", senha);
+            printf(CIANO "Informe a palavra chave: " RESET);
+            while (1) {
+                ch = getch();
+                if (ch == '\r') {
+                    senha[i] = '\0';
+                    break;
+                } else {
+                    senha[i++] = ch;
+                    printf("*");
+                }
+            }
 
             if (strcmp(hotel.clientes[cliente].Chave, senha) == 1) {
-                printf("Palavra chave incorreta.\n ");
+                printf(VERMELHO "Palavra chave incorreta.\n " RESET);
                 system("pause");
                 Clientes(hotel);
             }
         }
 
-        printf("Deseja excluir o cadastro de %s\n 1 - Sim \n 2 - Não; \n", hotel.clientes[cliente].nome);
+        printf(CIANO "Deseja excluir o cadastro de %s\n" VERDE " 1 - Sim " RESET "/" VERMELHO " 2 - Não \n" RESET, hotel.clientes[cliente].nome);
         scanf("%d", &comfirmacao);
 
         if (comfirmacao == 1) {
             system("cls");
-            printf("Cadatro do cliente excluido. \nId = %d\n", cliente);
+            printf(VERDE "Cadatro do cliente excluido. \nId = %d\n" RESET, cliente);
             *hotel.clientes[cliente].nome = '\0';
             *hotel.clientes[cliente].cpf = '\0';
             *hotel.clientes[cliente].endereco = '\0';
@@ -365,7 +386,7 @@ void excluirClientes(Hotel hotel) {
             Clientes(hotel);
         }
     } else {
-        printf("Não a clientes registrados\n.");
+        printf(VERMELHO "Não a clientes registrados\n." RESET);
         system("pause");
         Clientes(hotel);
     }
@@ -377,42 +398,42 @@ void excluirQuartos(Hotel hotel) {
     system("cls");
 
     if (hotel.Hotelquartos != 0) {
-        printf("Informe o numero do quarto: ");
+        printf(CIANO "Informe o numero do quarto: " RESET);
         scanf("%d", &quarto);
 
         int quarto = buscarIdDoQuarto(quarto, hotel);
 
         if (quarto > hotel.Hotelquartos) {
-            printf("O quarto não existe.\n");
+            printf(AMARELO "O quarto não existe.\n" RESET);
             system("pause");
             Quartos(hotel);
         }
 
         if (hotel.quartos[quarto].temCliente == 1) {
-            printf("O quarto de numero %d não pode ser excluido, pois a clientes registrados.\n", hotel.quartos[quarto].numero);
+            printf(AMARELO "O quarto de numero %d não pode ser excluido, pois a clientes registrados.\n" RESET, hotel.quartos[quarto].numero);
             system("pause");
             Quartos(hotel);
         }
 
         if (hotel.quartos[quarto].Idreserva == 1) {
-            printf("O quarto de numero %d não pode ser excluido, pois o querto está reservado.\n", hotel.quartos[quarto].numero);
+            printf(AMARELO "O quarto de numero %d não pode ser excluido, pois o querto está reservado.\n" RESET, hotel.quartos[quarto].numero);
             system("pause");
             Quartos(hotel);
         }
 
         if (hotel.quartos[quarto].existeQuarto == 0) {
-            printf("O quarto não pode ser excluido. pois não existe mais.\n");
+            printf(VERMELHO "O quarto não pode ser excluido. pois não existe mais.\n" RESET);
             system("pause");
             Quartos(hotel);
         }
 
-        printf("Deseja excluir o quarto de numero: %d\n 1 - Sim / 2 - Não \n", hotel.quartos[quarto].numero);
+        printf(CIANO "Deseja excluir o quarto de numero: %d" VERDE " 1 - Sim " RESET "/" VERMELHO " 2 - Não \n" RESET, hotel.quartos[quarto].numero);
         scanf("%d", &comfirmacao);
 
         if (comfirmacao == 1) {
             system("cls");
 
-            printf("Cadatro do quarto excluido. \nId = %d\n status %d\n", quarto, hotel.quartos[quarto].existeQuarto);
+            printf(VERDE "Cadatro do quarto excluido. \nId = %d\n" RESET, quarto);
             hotel.quartos[quarto].numero = '\0';
             hotel.quartos[quarto].preco = '\0';
             hotel.quartos[quarto].capacidade = '\0';
@@ -426,7 +447,7 @@ void excluirQuartos(Hotel hotel) {
             Quartos(hotel);
         }
     } else {
-        printf("Não a quartos registrados.\n.");
+        printf(VERMELHO "Não a quartos registrados.\n." RESET);
         system("pause");
         Quartos(hotel);
     }
@@ -434,83 +455,93 @@ void excluirQuartos(Hotel hotel) {
 
 void editarClientes(Hotel hotel) {
     int cliente;
-
+    int i = 0;
+    char ch;
     system("cls");
 
     if (hotel.HotelIdCliente != 0) {
-        printf("Informe o Id do cliente para editar seu cadastro: ");
+        printf(CIANO "Informe o Id do cliente para editar seu cadastro: " RESET);
         scanf("%d", &cliente);
 
         if (cliente > hotel.HotelIdCliente) {
-            printf("O cliente não existe.\n");
+            printf(VERMELHO "O cliente não existe.\n" RESET);
             system("pause");
             Clientes(hotel);
         }
 
         if (cliente == 0) {
-            printf("O ID 0 não pode ser editado.\n");
+            printf(VERMELHO "O ID 0 não pode ser editado.\n" RESET);
             system("pause");
             Clientes(hotel);
         }
 
         if (hotel.clientes[cliente].temQuarto == 1) {
-            printf("O ID %d não pode ser editado, pois está registrado em um quarto.\n", cliente);
+            printf(AMARELO "O ID %d não pode ser editado, pois está registrado em um quarto.\n" RESET, cliente);
             system("pause");
             Clientes(hotel);
         }
 
         if (hotel.clientes[cliente].reservadoC == 1) {
-            printf("O ID %d não pode ser editado, pois tem uma reserva.\n", cliente);
+            printf(AMARELO "O ID %d não pode ser editado, pois tem uma reserva.\n" RESET, cliente);
             system("pause");
             Clientes(hotel);
         }
 
         if (hotel.clientes[cliente].existeCliente == 0) {
-            printf("O ID %d não pode ser editado. pois não existe mais.\n", cliente);
+            printf(AMARELO "O ID %d não pode ser editado. pois não existe mais.\n" RESET, cliente);
             system("pause");
             Clientes(hotel);
         }
 
         if (hotel.adm.adm == 0) {
             char senha[30];
-            printf("Digite sua senha.\n");
-            scanf("%s", senha);
+            printf(CIANO "Digite sua senha: " RESET);
+            while (1) {
+                ch = getch();
+                if (ch == '\r') {
+                    senha[i] = '\0';
+                    break;
+                } else {
+                    senha[i++] = ch;
+                    printf("*");
+                }
+            }
             if (strcmp(hotel.clientes[cliente].Chave, senha) == 1) {
-                printf("Palavra chave incorreta.\n");
+                printf(VERMELHO "Palavra chave incorreta.\n" RESET);
                 system("pause");
                 Clientes(hotel);
             }
         }
 
-        printf("Digite o novo cpf: ");
+        printf(CIANO "Digite o novo cpf: " RESET);
         scanf("%s", hotel.clientes[cliente].cpf);
 
         if (!verificaCPF(hotel.clientes[cliente].cpf)) {
             system("cls");
-            printf("CPF inválido.\n");
+            printf(AMARELO "CPF inválido.\n" RESET);
 
             editarClientes(hotel);
         }
 
         fflush(stdin);
 
-        printf("Digite o novo nome do cliente: ");
+        printf(CIANO "Digite o novo nome do cliente: " RESET);
         gets(hotel.clientes[cliente].nome);
 
-        printf("Digite o novo endereço do cliente: ");
+        printf(CIANO "Digite o novo endereço do cliente: " RESET);
         gets(hotel.clientes[cliente].endereco);
 
-        printf("Digite o novo telefone do cliente: ");
+        printf(CIANO "Digite o novo telefone do cliente: " RESET);
         gets(hotel.clientes[cliente].telefone);
 
-        printf("Edição completa. o cliente do id %d, foi editado com sucesso.\n", cliente);
+        printf(VERDE "Edição completa. o cliente do id %d, foi editado com sucesso.\n" RESET, cliente);
         system("pause");
         sleep(3);
         salvarDados(hotel);
 
         Clientes(hotel);
     } else {
-        printf("Não a clientes registrados.\n");
+        printf(VERMELHO "Não a clientes registrados.\n" RESET);
     }
 
     system("pause");
@@ -530,61 +561,61 @@ void editarQuartos(Hotel hotel) {
         numero = buscarIdDoQuarto(numero, hotel);
 
         if (numero > hotel.Hotelquartos) {
-            printf("O quarto não existe.\n");
+            printf(VERMELHO "O quarto não existe.\n" RESET);
             system("pause");
             Quartos(hotel);
         }
 
         if (hotel.quartos[numero].temCliente == 1) {
-            printf("O quarto de numero %d não pode ser editado, pois a clientes registrados.\n", numero);
+            printf(AMARELO "O quarto de numero %d não pode ser editado, pois a clientes registrados.\n" RESET, numero);
             system("pause");
             Quartos(hotel);
         }
 
         if (hotel.quartos[numero].Idreserva == 1) {
-            printf("O quarto de numero %d não pode ser editado, pois o querto está reservado.\n", numero);
+            printf(AMARELO "O quarto de numero %d não pode ser editado, pois o querto está reservado.\n" RESET, numero);
             system("pause");
             Quartos(hotel);
         }
 
         if (hotel.quartos[numero].existeQuarto == 0) {
-            printf("O quarto não pode ser excluido. pois não existe mais.\n");
+            printf(AMARELO "O quarto não pode ser excluido. pois não existe mais.\n" RESET);
             system("pause");
             Quartos(hotel);
         }
 
-        printf("Digite o número do quarto: ");
+        printf(CIANO "Digite o número do quarto: " RESET);
         scanf("%d", &aux);
 
         if (buscarNumeroDeQuartos(aux, hotel) == 0) {
-            printf("Numero de quarto cadastrado.\n");
+            printf(AMARELO "Numero de quarto cadastrado.\n" RESET);
             system("pause");
             Quartos(hotel);
         }
 
         hotel.quartos[numero].numero = aux;
 
-        printf("Digite a capacidade do quarto: ");
+        printf(CIANO "Digite a capacidade do quarto: " RESET);
         scanf("%d", &hotel.quartos[numero].capacidade);
 
         if (hotel.quartos[numero].capacidade > 4) {
             hotel.quartos[numero].capacidade = 4;
-            printf("O maximo em um quarto é 4 pessoas.\n");
+            printf(AMARELO "O maximo em um quarto é 4 pessoas.\n" RESET);
         } else if (hotel.quartos[numero].capacidade == 0) {
             hotel.quartos[numero].capacidade = 1;
-            printf("O minimo em um quarto é 1 pessoas.\n");
+            printf(AMARELO "O minimo em um quarto é 1 pessoas.\n" RESET);
         }
 
-        printf("Digite o preço do quarto: ");
+        printf(CIANO "Digite o preço do quarto: " RESET);
         scanf("%f", &hotel.quartos[numero].preco);
 
-        printf("Edição completa. o Quarto do id %d, foi editado com sucesso.\n", numero);
+        printf(VERDE "Edição completa. o Quarto do id %d, foi editado com sucesso.\n" RESET, numero);
         system("pause");
         sleep(3);
         salvarDados(hotel);
         Quartos(hotel);
     } else {
-        printf("Não a quartos registrados.\n");
+        printf(VERMELHO "Não a quartos registrados.\n" RESET);
         system("pause");
         Quartos(hotel);
     }
@@ -613,14 +644,14 @@ void checkInQuarto(Hotel hotel) {
 
     system("cls");
 
-    printf("Digite o numero do quarto: ");
+    printf(CIANO "Digite o numero do quarto: " RESET);
     scanf("%d", &quarto);
 
     if (buscarIdDoQuarto(quarto, hotel) != 0) {
         quarto = buscarIdDoQuarto(quarto, hotel);
 
         if (quarto > hotel.Hotelquartos) {
-            printf("O quarto não existe.\n");
+            printf(VERMELHO "O quarto não existe.\n" RESET);
             system("pause");
             Resevas(hotel);
         }
@@ -629,11 +660,11 @@ void checkInQuarto(Hotel hotel) {
         quarto = 0;
 
     } else if (hotel.quartos[quarto].existeQuarto == 0) {
-        printf("Quarto não existe.\n");
+        printf(VERMELHO "Quarto não existe.\n" RESET);
         system("pause");
         Resevas(hotel);
     } else {
-        printf("Quarto não existe.\n");
+        printf(VERMELHO "Quarto não existe.\n" RESET);
         system("pause");
         Resevas(hotel);
     }
@@ -642,25 +673,25 @@ void checkInQuarto(Hotel hotel) {
     scanf("%d", &cliente);
 
     if (cliente > hotel.HotelIdCliente) {
-        printf("O cliente não existe.\n");
+        printf(VERMELHO "O cliente não existe.\n" RESET);
         system("pause");
         Resevas(hotel);
     }
 
     if (cliente == 0) {
-        printf("Não pode acicionar o ID 0.\n");
+        printf(VERMELHO "Não pode acicionar o ID 0.\n" RESET);
         system("pause");
         Resevas(hotel);
     }
 
     if (hotel.clientes[cliente].temQuarto == 1) {
-        printf("O cliente já está em um quarto.\n");
+        printf(AMARELO "O cliente já está em um quarto.\n" RESET);
         system("pause");
         Resevas(hotel);
     }
 
     if (hotel.clientes[cliente].existeCliente == 0) {
-        printf("O ID %d não pode alugar um quarto. pois não existe mais.\n", cliente);
+        printf(AMARELO "O ID %d não pode alugar um quarto. pois não existe mais.\n" RESET, cliente);
         system("pause");
         Resevas(hotel);
     }
@@ -680,19 +711,19 @@ void checkInQuarto(Hotel hotel) {
                 strcpy(hotel.historico[hotel.Contador[2]], buffer);
                 hotel.Contador[2]++;
 
-                printf("Cliente adcionado\n");
+                printf(VERDE "Cliente adcionado\n" RESET);
                 system("pause");
                 sleep(3);
                 salvarDados(hotel);
                 Resevas(hotel);
             } else {
-                printf("Limite alcançado\n");
+                printf(AMARELO "Limite alcançado\n" RESET);
                 system("pause");
                 Resevas(hotel);
             }
 
         } else {
-            printf("Não é o cliente da reserva, quarto reservado para %s\n", hotel.clientes[hotel.quartos[quarto].Idreserva].nome);
+            printf(VERMELHO "Não é o cliente da reserva, quarto reservado para %s\n" RESET, hotel.clientes[hotel.quartos[quarto].Idreserva].nome);
             system("pause");
             Resevas(hotel);
         }
@@ -711,13 +742,13 @@ void checkInQuarto(Hotel hotel) {
         strcpy(hotel.historico[hotel.Contador[2]], buffer);
         hotel.Contador[2]++;
 
-        printf("Cliente adcionado\n");
+        printf(VERDE "Cliente adcionado\n" RESET);
         system("pause");
         sleep(3);
         salvarDados(hotel);
         Resevas(hotel);
     } else {
-        printf("Limite alcançado\n");
+        printf(AMARELO "Limite alcançado\n" RESET);
         system("pause");
         Resevas(hotel);
     }
@@ -745,19 +776,19 @@ void checkOutQuarto(Hotel hotel) {
     scanf("%d", &cliente);
 
     if (cliente > hotel.HotelIdCliente) {
-        printf("O cliente não existe.\n");
+        printf(VERMELHO "O cliente não existe.\n" RESET);
         system("pause");
         Resevas(hotel);
     }
 
     if (cliente == 0) {
-        printf("O ID 0 não pode ser modificado.\n");
+        printf(VERMELHO "O ID 0 não pode ser modificado.\n" RESET);
         system("pause");
         Clientes(hotel);
     }
 
     if (hotel.clientes[cliente].existeCliente == 0) {
-        printf("O ID %d não tem quartos. pois não existe mais.\n", cliente);
+        printf(AMARELO "O ID %d não tem quartos. pois não existe mais.\n" RESET, cliente);
         system("pause");
         Clientes(hotel);
     }
@@ -767,7 +798,7 @@ void checkOutQuarto(Hotel hotel) {
             int possicao = procurarClienteNoQuarto(hotel.clientes[cliente].quartoC, cliente, hotel);
 
             if (possicao == 5) {
-                printf("cliente não estar em um quarto.\n");
+                printf(AMARELO "cliente não estar em um quarto.\n" RESET);
                 system("pause");
                 Resevas(hotel);
             }
@@ -776,8 +807,8 @@ void checkOutQuarto(Hotel hotel) {
 
             int dias = (diaDoAno - hotel.clientes[cliente].tempoNoQuarto) + 1;
 
-            printf("O cliente %s, precisar pagar %d de um periodo de %d dias no quarto.\n", hotel.clientes[cliente].nome, preco, dias);
-            printf("1 - Pagou / 2 não pagou.\n");
+            printf(CIANO "O cliente %s, precisar pagar %d de um periodo de %d dias no quarto.\n" RESET, hotel.clientes[cliente].nome, preco, dias);
+            printf(VERDE "1 - Pagou " RESET "/" VERMELHO "2 não pagou.\n" RESET);
             scanf("%d", &pago);
 
             if (pago == 1) {
@@ -792,19 +823,19 @@ void checkOutQuarto(Hotel hotel) {
                 hotel.clientes[cliente].reservadoC = 0;
                 hotel.quartos[hotel.clientes[cliente].quartoC].reservado = 0;
 
-                printf("O Cliente pagou R$%d. dos %s hospedado.\n", preco, (dias > 2) ? dias + " dias" : dias + " dia");
+                printf(VERDE "O Cliente pagou R$%d. dos %s hospedado.\n", preco, (dias > 2) ? dias + " dias" : dias + " dia" RESET);
                 sleep(3);
                 salvarDados(hotel);
                 system("pause");
                 Resevas(hotel);
             }
         } else {
-            printf("Cliente não está em um quarto.\n");
+            printf(VERMELHO "Cliente não está em um quarto.\n" RESET);
             system("pause");
             Resevas(hotel);
         }
     } else {
-        printf("Cliente não existe.\n");
+        printf(VERMELHO "Cliente não existe.\n" RESET);
         system("pause");
         Resevas(hotel);
     }
@@ -824,43 +855,43 @@ void reservaUmQuarto(Hotel hotel) {
 
     int cliente, quarto;
 
-    printf("Digite o Id do cliente para reserva um quarto: ");
+    printf(CIANO "Digite o Id do cliente para reserva um quarto: " RESET);
     scanf("%d", &cliente);
 
     if (cliente > hotel.HotelIdCliente) {
-        printf("O cliente não existe.\n");
+        printf(VERMELHO "O cliente não existe.\n" RESET);
         system("pause");
         Resevas(hotel);
     }
     if (cliente == 0) {
-        printf("O ID 0 não pode ser excluido.\n");
+        printf(VERMELHO "O ID 0 não pode ter uma reserva.\n" RESET);
         system("pause");
         Resevas(hotel);
     }
     if (hotel.clientes[cliente].temQuarto == 1) {
-        printf("Cliente já tem o quarto.\n");
+        printf(AMARELO "Cliente já tem o quarto.\n" RESET);
         system("pause");
         Resevas(hotel);
     }
     if (hotel.clientes[cliente].reservadoC == 1) {
-        printf("Cliente já tem uma reserva.\n");
+        printf(AMARELO "Cliente já tem uma reserva.\n" RESET);
         system("pause");
         Resevas(hotel);
     }
     if (hotel.clientes[cliente].existeCliente == 0) {
-        printf("O ID %d não pode fazer uma reseva. pois não existe mais.\n", cliente);
+        printf(AMARELO "O ID %d não pode fazer uma reseva. pois não existe mais.\n" RESET, cliente);
         system("pause");
         Resevas(hotel);
     }
 
-    printf("Digite o numero do quarto: ");
+    printf(CIANO "Digite o numero do quarto: " RESET);
     scanf("%d", &quarto);
 
     if (buscarIdDoQuarto(quarto, hotel) != 0) {
         quarto = buscarIdDoQuarto(quarto, hotel);
 
         if (quarto > hotel.Hotelquartos) {
-            printf("O quarto não existe.\n");
+            printf(VERMELHO "O quarto não existe.\n" RESET);
             system("pause");
             Resevas(hotel);
         }
@@ -868,17 +899,17 @@ void reservaUmQuarto(Hotel hotel) {
     } else if (hotel.quartos[0].numero == quarto) {
         quarto = 0;
     } else if (hotel.quartos[quarto].existeQuarto == 0) {
-        printf("Quarto não existe.\n");
+        printf(VERMELHO "Quarto não existe.\n" RESET);
         system("pause");
         Resevas(hotel);
     } else {
-        printf("Quarto não existe.\n");
+        printf(VERMELHO "Quarto não existe.\n" RESET);
         system("pause");
         Resevas(hotel);
     }
 
     if (hotel.quartos[quarto].reservado == 1) {
-        printf("Quarto ja estar reservado para %s.\n", hotel.clientes[hotel.quartos[quarto].Idreserva].nome);
+        printf(AMARELO "Quarto está reservado para %s.\n" RESET, hotel.clientes[hotel.quartos[quarto].Idreserva].nome);
         system("pause");
         Resevas(hotel);
     }
@@ -893,7 +924,7 @@ void reservaUmQuarto(Hotel hotel) {
     hotel.quartos[quarto].Idreserva = cliente;
     hotel.quartos[quarto].reservado = 1;
 
-    printf("Quarto reservado para %s.\n", hotel.clientes[cliente].nome);
+    printf(AMARELO "Quarto reservado para %s.\n" RESET, hotel.clientes[cliente].nome);
     system("pause");
     sleep(3);
     salvarDados(hotel);
@@ -968,53 +999,65 @@ void exibirClientes(Hotel hotel) {
 void detalharClientes(Hotel hotel) {
     int cliente;
     char senha[20];
+    int i = 0;
+    char ch;
 
     system("cls");
 
     if (hotel.HotelIdCliente != 0) {
-        printf("Informe o Id do cliente\n ");
+        printf(CIANO "Informe o Id do cliente\n " RESET);
         scanf("%d", &cliente);
 
-        printf("Nome: %s\n", hotel.clientes[cliente].Chave);
+        printf("Nome: %s\n", hotel.clientes[cliente].nome);
 
         if (cliente > hotel.HotelIdCliente) {
-            printf("O cliente não existe.\n");
+            printf(VERMELHO "O cliente não existe.\n" RESET);
             system("pause");
             Clientes(hotel);
         }
         if (hotel.clientes[cliente].existeCliente == 0) {
-            printf("O ID %d não existe mais.\n", cliente);
+            printf(AMARELO "O ID %d não existe mais.\n" RESET, cliente);
             system("pause");
             Clientes(hotel);
         }
 
         if (hotel.adm.adm == 0) {
             fflush(stdin);
-            printf("Informe a palavra chave do cliente\n ");
-            scanf("%s", senha);
+            printf(CIANO "Informe a palavra chave do cliente\n " RESET);
+
+            while (1) {
+                ch = getch();
+                if (ch == '\r') {
+                    senha[i] = '\0';
+                    break;
+                } else {
+                    senha[i++] = ch;
+                    printf("*");
+                }
+            }
         }
 
         if (strcmp(hotel.clientes[cliente].Chave, senha) == 0 || hotel.adm.adm == 1) {
             system("cls");
 
-            printf("Nome: %s\n", hotel.clientes[cliente].nome);
-            printf("Cpf: %s\n", hotel.clientes[cliente].cpf);
-            printf("Endereço: %s\n", hotel.clientes[cliente].endereco);
-            printf("Telefone: %s\n", hotel.clientes[cliente].telefone);
+            printf(CIANO"Nome:"RESET" %s\n", hotel.clientes[cliente].nome);
+            printf(CIANO"Cpf:"RESET" %s\n", hotel.clientes[cliente].cpf);
+            printf(CIANO"Endereço:"RESET" %s\n", hotel.clientes[cliente].endereco);
+            printf(CIANO"Telefone:"RESET" %s\n\n", hotel.clientes[cliente].telefone);
 
             system("pause");
             sleep(3);
             salvarDados(hotel);
             Clientes(hotel);
         } else {
-            printf("Palavra chave incorreta.\n");
+            printf(VERMELHO "Palavra chave incorreta.\n" RESET);
             system("pause");
 
             Clientes(hotel);
         }
 
     } else {
-        printf("Não a clientes registrados.\n");
+        printf(VERMELHO"Não a clientes registrados.\n"RESET);
     }
     system("pause");
 
