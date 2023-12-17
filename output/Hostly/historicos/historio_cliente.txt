@@ -1,0 +1,2 @@
+ID do cliente 1 / CPF 11111111111 / Nome 1 / Data do cadastro 17/12/2023
+ID do cliente 1 / CPF 11111111111 / Nome 1 / Data do cadastro 17/12/2023

@@ -6,6 +6,7 @@
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
+#include <sys/stat.h>
 
 #define MAX_CLIENTES 50
 #define MAX_QUARTOS 30
@@ -94,7 +95,7 @@ int adicionarNoQuarto(int numero, int cliente, Hotel hotel);
 int procurarClienteNoQuarto(int numero, int cliente, Hotel hotel);
 
 void salvarDados(Hotel hotel) {
-    FILE *file = fopen("hotel.bin", "wb");
+    FILE *file = fopen("Hostaly/saves/Hostaly.bin", "wb");
 
     fwrite(&hotel, sizeof(Hotel), 1, file);
 
@@ -175,7 +176,7 @@ void cadastrarCliente(Hotel hotel) {
         free(senha);
 
         FILE *historio_cliente;
-        historio_cliente = fopen("historio_cliente.txt", "a");
+        historio_cliente = fopen("Hostaly/historicos/historio_cliente.txt", "a");
         fprintf(historio_cliente, "ID do cliente %d / CPF %s / Nome %s / Data do cadastro %d/%d/%d\n", hotel.idAux, hotel.clientes[hotel.idAux].cpf, hotel.clientes[hotel.idAux].nome, diaDoMes, mes, ano);
         fclose(historio_cliente);
         fflush(stdin);
@@ -272,7 +273,7 @@ void cadastrarQuarto(Hotel hotel) {
         }
 
         FILE *historio_Quarto;
-        historio_Quarto = fopen("historio_Quarto.txt", "a");
+        historio_Quarto = fopen("Hostaly/historicos/historio_Quarto.txt", "a");
         fprintf(historio_Quarto,  "Numero do quarto %d / Capacidade %d / Preço %.2f / Data %d/%d/%d", numero, hotel.quartos[hotel.idAux].capacidade, hotel.quartos[hotel.idAux].preco, diaDoMes, mes, ano);
         fclose(historio_Quarto);
         fflush(stdin);
@@ -677,7 +678,7 @@ void checkInQuarto(Hotel hotel) {
                 hotel.clientes[cliente].tempoNoQuarto = diaDoAno;
 
                 FILE *historico_checkIn;
-                historico_checkIn = fopen("historico_checkIn.txt", "a");
+                historico_checkIn = fopen("Hostaly/historicos/historico_checkIn.txt", "a");
                 fprintf(historico_checkIn,  "Numero do quarto %d / Nome do cliente: %s / Preço do quarto %.2f / Data %d/%d/%d", hotel.quartos[quarto].numero, hotel.clientes[cliente].nome, hotel.quartos[quarto].preco, diaDoMes, mes, ano);
                 fclose(historico_checkIn);
                 fflush(stdin);
@@ -708,7 +709,7 @@ void checkInQuarto(Hotel hotel) {
         hotel.clientes[cliente].tempoNoQuarto = diaDoAno;
 
         FILE *historico_checkIn;
-                historico_checkIn = fopen("historico_checkIn.txt", "a");
+                historico_checkIn = fopen("Hostaly/historicos/historico_checkIn.txt", "a");
                 fprintf(historico_checkIn,  "Numero do quarto %d / Nome do cliente: %s / Preço do quarto %.2f / Data %d/%d/%d", hotel.quartos[quarto].numero, hotel.clientes[cliente].nome, hotel.quartos[quarto].preco, diaDoMes, mes, ano);
                 fclose(historico_checkIn);
                 fflush(stdin);
@@ -781,7 +782,7 @@ void checkOutQuarto(Hotel hotel) {
             if (pago == 1) {
 
                 FILE *historico_checkout;
-                historico_checkout = fopen("historico_checkout.txt", "a");
+                historico_checkout = fopen("Hostaly/historicos/historico_checkout.txt", "a");
                 fprintf(historico_checkout, "Numero do quarto: %d / Preço pago: %.2f / Data %d/%d/%d / Dias hospedados: %d / Nome: %s / CPf: %s", hotel.quartos[hotel.clientes[cliente].quartoC].numero, hotel.quartos[hotel.clientes[cliente].quartoC].preco, diaDoMes, mes, ano, dias, hotel.clientes[cliente].nome, hotel.clientes[cliente].cpf);
                 fclose(historico_checkout);
                 fflush(stdin);
@@ -885,7 +886,7 @@ void reservaUmQuarto(Hotel hotel) {
     }
 
     FILE *historico_reserva;
-    historico_reserva = fopen("historico_reserva.txt", "a");
+    historico_reserva = fopen("Hostaly/historicos/historico_reserva.txt", "a");
     fprintf(historico_reserva, "Numero do quarto %d / Nome do cliente: %s / Preço do quarto %.2f / Data da reserva %d/%d/%d", hotel.quartos[quarto].numero, hotel.clientes[cliente].nome, hotel.quartos[quarto].preco, diaDoMes, mes, ano);
     fclose(historico_reserva);     
     fflush(stdin);
@@ -906,7 +907,7 @@ void reservaUmQuarto(Hotel hotel) {
 
 void historicoDeQuartos(Hotel hotel) {
     FILE *historio_Quarto;
-    historio_Quarto = fopen("historio_Quarto.txt", "r");
+    historio_Quarto = fopen("Hostaly/historicos/historio_Quarto.txt", "r");
     if (historio_Quarto == NULL) {
         printf(VERMELHO"Não a clientes registrados.\n"RESET);
         system("pause");
@@ -923,7 +924,7 @@ void historicoDeQuartos(Hotel hotel) {
 }
 void historicoDeClientes(Hotel hotel) {
     FILE *historio_cliente;
-    historio_cliente = fopen("historio_cliente.txt", "r");
+    historio_cliente = fopen("Hostaly/historicos/historio_cliente.txt", "r");
     if (historio_cliente == NULL) {
         printf(VERMELHO"Não a clientes registrados.\n"RESET);
         system("pause");
@@ -940,7 +941,7 @@ void historicoDeClientes(Hotel hotel) {
 }
 void historicoDiaria(Hotel hotel) {
     FILE *historico_checkIn;
-    historico_checkIn = fopen("historico_checkIn.txt", "r");
+    historico_checkIn = fopen("Hostaly/historicos/historico_checkIn.txt", "r");
     if (historico_checkIn == NULL) {
         printf(VERMELHO"Não a clientes registrados.\n"RESET);
         system("pause");
@@ -957,7 +958,7 @@ void historicoDiaria(Hotel hotel) {
 }
 void historicoDeReservas(Hotel hotel) {
     FILE *historico_reserva;
-    historico_reserva = fopen("historico_reserva.txt", "r");
+    historico_reserva = fopen("Hostaly/historicos/historico_reserva.txt", "r");
     if (historico_reserva == NULL) {
         printf(VERMELHO"Não a clientes registrados.\n"RESET);
         system("pause");
@@ -974,7 +975,7 @@ void historicoDeReservas(Hotel hotel) {
 }
 void historicoDePagamento(Hotel hotel) {
     FILE *historico_checkout;
-    historico_checkout = fopen("historico_checkout.txt", "r");
+    historico_checkout = fopen("Hostaly/historicos/historico_checkout.txt", "r");
     if (historico_checkout == NULL) {
         printf(VERMELHO"Não a clientes registrados.\n"RESET);
         system("pause");
@@ -1492,9 +1493,12 @@ int main() {
     hotel.clientes[0].existeCliente = 1;
 
     hotel.Hotelquartos = 0;
+    mkdir("Hostaly");
+    mkdir("Hostaly/historicos");
+    mkdir("Hostaly/saves");
+   
 
-
-    FILE *file = fopen("hotel.bin", "rb");
+    FILE *file = fopen("Hostaly/saves/Hostaly.bin", "rb");
         if (file == NULL) {
             printf("Arquivo não encontrado.\n");
         } else {
