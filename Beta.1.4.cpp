@@ -853,7 +853,7 @@ void reservaUmQuarto(Hotel hotel) {
     int mes = tempoReal->tm_mon + 1;
     int ano = tempoReal->tm_year + 1900;
 
-    int cliente, Iquarto, quarto;
+    int cliente, quarto;
 
     printf(CIANO "Digite o Id do cliente para reserva um quarto: " RESET);
     scanf("%d", &cliente);
@@ -885,18 +885,22 @@ void reservaUmQuarto(Hotel hotel) {
     }
 
     printf(CIANO "Digite o numero do quarto: " RESET);
-    scanf("%d", &Iquarto);
+    scanf("%d", &quarto);
 
-    if (buscarIdDoQuarto(Iquarto, hotel) != 0) {
-        quarto = buscarIdDoQuarto(Iquarto, hotel);
 
+    if (buscarIdDoQuarto(quarto, hotel) != 0) {
+
+       int quarto1 = buscarIdDoQuarto(quarto, hotel);
+        quarto = quarto1;
         if (quarto > hotel.Hotelquartos) {
             printf(VERMELHO "O quarto não existe.\n" RESET);
+            printf(AMARELO "1\n");
             system("pause");
             Resevas(hotel);
+        } 
+            system("pause");
         }
-
-    } else if (hotel.quartos[0].numero == quarto) {
+        else if (hotel.quartos[0].numero == quarto) {
         quarto = 0;
     } else if (hotel.quartos[quarto].existeQuarto == 0) {
         printf(VERMELHO "Quarto não existe.\n" RESET);
@@ -919,11 +923,17 @@ void reservaUmQuarto(Hotel hotel) {
     strcpy(hotel.historico[hotel.Contador[2]], buffer);
     hotel.Contador[4]++;
 
-    hotel.clientes[cliente].reservadoC = 1;
-    hotel.clientes[cliente].IdreservaC = quarto;
-    hotel.quartos[quarto].Idreserva = cliente;
-    hotel.quartos[quarto].reservado = 1;
+    fflush(stdin);
 
+    hotel.clientes[cliente].reservadoC = 1;
+     
+    hotel.clientes[cliente].IdreservaC = quarto;
+   
+    hotel.quartos[quarto].Idreserva = cliente;
+  
+    hotel.quartos[quarto].reservado = 1;
+   
+   
     printf(AMARELO "Quarto reservado para %s.\n" RESET, hotel.clientes[cliente].nome);
     system("pause");
     sleep(3);
