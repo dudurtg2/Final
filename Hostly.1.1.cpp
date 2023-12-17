@@ -9,7 +9,6 @@
 
 #define MAX_CLIENTES 50
 #define MAX_QUARTOS 30
-#define MAX_HISTORICO 100
 
 #define RESET "\x1b[0m"
 #define VERMELHO "\x1b[31m"
@@ -50,19 +49,13 @@ typedef struct {
     int Idreserva;
 } Quarto;
 typedef struct {
-    char historicos[5][70];
-} Historico;
-typedef struct {
     Cliente clientes[MAX_CLIENTES];
     Quarto quartos[MAX_QUARTOS];
     Adminstrador adm;
-    Historico historico[MAX_HISTORICO]; /* <- inpementar */
     int HotelIdCliente;
     int Hotelquartos;
-    int Contador[5];
     int idAux;
 } Hotel;
-
 
 void salvarDados(Hotel hotel);
 
@@ -70,9 +63,12 @@ void cadastrarCliente(Hotel hotel);
 void cadastrarQuarto(Hotel hotel);
 void editarClientes(Hotel hotel);
 void editarQuartos(Hotel hotel);
-
 void excluirClientes(Hotel hotel);
 void excluirQuartos(Hotel hotel);
+
+void checkInQuarto(Hotel hotel);
+void checkOutQuarto(Hotel hotel);
+void reservaUmQuarto(Hotel Hotel);
 
 void historicoDeReservas(Hotel hotel); 
 void historicoDiaria(Hotel hotel);     
@@ -84,22 +80,18 @@ void exibirQuartos(Hotel hotel);
 void detalharClientes(Hotel hotel);
 void exibirClientes(Hotel hotel);
 
-void checkInQuarto(Hotel hotel);
-void checkOutQuarto(Hotel hotel);
-void reservaUmQuarto(Hotel Hotel);
-
-int verificaCPF(char *cpfEntrada);
-int buscarIdDoQuarto(int numero, Hotel Hotel);
-int buscarNumeroDeQuartos(int numero, Hotel hotel);
-int adicionarNoQuarto(int numero, int cliente, Hotel hotel);
-int procurarClienteNoQuarto(int numero, int cliente, Hotel hotel);
-
 void menu(Hotel hotel);
 void historicoMenu(Hotel hotel);
 void Clientes(Hotel hotel);
 void Quartos(Hotel hotel);
 void Resevas(Hotel hotel);
 void Login(Hotel hotel);
+
+int verificaCPF(char *cpfEntrada);
+int buscarIdDoQuarto(int numero, Hotel Hotel);
+int buscarNumeroDeQuartos(int numero, Hotel hotel);
+int adicionarNoQuarto(int numero, int cliente, Hotel hotel);
+int procurarClienteNoQuarto(int numero, int cliente, Hotel hotel);
 
 void salvarDados(Hotel hotel) {
     FILE *file = fopen("hotel.bin", "wb");
@@ -176,25 +168,25 @@ void cadastrarCliente(Hotel hotel) {
         strcpy(hotel.clientes[hotel.idAux].cpf, cpf);
         strcpy(hotel.clientes[hotel.idAux].telefone, telefone);
         strcpy(hotel.clientes[hotel.idAux].Chave, senha);
-
-        char *buffer = (char*)malloc(sizeof(char));
-        sprintf(buffer, "ID do cliente %d / CPF %s / Nome %s / Data do cadastro %d/%d/%d\n", hotel.idAux, hotel.clientes[hotel.idAux].cpf, hotel.clientes[hotel.idAux].nome, diaDoMes, mes, ano);
-        strcpy(hotel.historico[1].historicos[hotel.Contador[1]], buffer);
-        hotel.Contador[1]++;
-
-        free(buffer);
         free(nome);
         free(endereco);
         free(cpf);
         free(telefone);
         free(senha);
 
+        FILE *historio_cliente;
+        historio_cliente = fopen("historio_cliente.txt", "a");
+        fprintf(historio_cliente, "ID do cliente %d / CPF %s / Nome %s / Data do cadastro %d/%d/%d\n", hotel.idAux, hotel.clientes[hotel.idAux].cpf, hotel.clientes[hotel.idAux].nome, diaDoMes, mes, ano);
+        fclose(historio_cliente);
+        fflush(stdin);
+        
         if (hotel.idAux == hotel.HotelIdCliente) {
             hotel.HotelIdCliente++;
             printf(AMARELO" ID do cliente %d \n CPF %s \n Nome %s \n Data do cadastro %d/%d/%d\n"RESET, hotel.idAux, hotel.clientes[hotel.idAux].cpf, hotel.clientes[hotel.idAux].nome, diaDoMes, mes, ano);
             system("pause");
             sleep(1);
             salvarDados(hotel);
+            sleep(1);
             Clientes(hotel);
 
         } else {
@@ -202,6 +194,7 @@ void cadastrarCliente(Hotel hotel) {
             system("pause");
             sleep(1);
             salvarDados(hotel);
+            sleep(1);
             Clientes(hotel);
         }
     } else {
@@ -278,24 +271,27 @@ void cadastrarQuarto(Hotel hotel) {
             hotel.quartos[hotel.idAux].idCliente[loop] = 0;
         }
 
-        char *buffer = (char*)malloc(sizeof(char));
-        sprintf(buffer, "Numero do quarto %d / Capacidade %d / Preço %.2f / Data %d/%d/%d", numero, hotel.quartos[hotel.idAux].capacidade, hotel.quartos[hotel.idAux].preco, diaDoMes, mes, ano);
-        strcpy(hotel.historico[0].historicos[hotel.Contador[0]], buffer);
-        hotel.Contador[0]++;
-        free(buffer);
+        FILE *historio_Quarto;
+        historio_Quarto = fopen("historio_Quarto.txt", "a");
+        fprintf(historio_Quarto,  "Numero do quarto %d / Capacidade %d / Preço %.2f / Data %d/%d/%d", numero, hotel.quartos[hotel.idAux].capacidade, hotel.quartos[hotel.idAux].preco, diaDoMes, mes, ano);
+        fclose(historio_Quarto);
+        fflush(stdin);
 
         if (hotel.idAux == hotel.Hotelquartos) {
             hotel.Hotelquartos++;
             sleep(1);
             salvarDados(hotel);
+            sleep(1);
             Quartos(hotel);
         } else {
             sleep(1);
             salvarDados(hotel);
+            sleep(1);
             Quartos(hotel);
         }
         sleep(1);
         salvarDados(hotel);
+        sleep(1);
         Quartos(hotel);
     } else if (comfirmacao == 2) {
         Quartos(hotel);
@@ -605,6 +601,7 @@ void editarQuartos(Hotel hotel) {
     system("pause");
     Quartos(hotel);
 }
+
 void checkInQuarto(Hotel hotel) {
     int quarto;
     int cliente;
@@ -679,16 +676,17 @@ void checkInQuarto(Hotel hotel) {
                 hotel.clientes[cliente].temQuarto = 1;
                 hotel.clientes[cliente].tempoNoQuarto = diaDoAno;
 
-                char *buffer = (char*)malloc(sizeof(char));
-                sprintf(buffer, "Numero do quarto %d / Nome do cliente: %s / Preço do quarto %.2f / Data %d/%d/%d", hotel.quartos[quarto].numero, hotel.clientes[cliente].nome, hotel.quartos[quarto].preco, diaDoMes, mes, ano);
-                strcpy(hotel.historico[2].historicos[hotel.Contador[2]], buffer);
-                hotel.Contador[2]++;
-                free(buffer);
+                FILE *historico_checkIn;
+                historico_checkIn = fopen("historico_checkIn.txt", "a");
+                fprintf(historico_checkIn,  "Numero do quarto %d / Nome do cliente: %s / Preço do quarto %.2f / Data %d/%d/%d", hotel.quartos[quarto].numero, hotel.clientes[cliente].nome, hotel.quartos[quarto].preco, diaDoMes, mes, ano);
+                fclose(historico_checkIn);
+                fflush(stdin);
 
                 printf(VERDE "Cliente adcionado\n" RESET);
                 system("pause");
                 sleep(1);
                 salvarDados(hotel);
+                sleep(1);
                 Resevas(hotel);
             } else {
                 printf(AMARELO "Limite alcançado\n" RESET);
@@ -709,16 +707,17 @@ void checkInQuarto(Hotel hotel) {
         hotel.clientes[cliente].temQuarto = 1;
         hotel.clientes[cliente].tempoNoQuarto = diaDoAno;
 
-        char *buffer = (char*)malloc(sizeof(char));
-        sprintf(buffer, "Numero do quarto %d / Nome do cliente: %s / Preço do quarto %.2f / Data %d/%d/%d", hotel.quartos[quarto].numero, hotel.clientes[cliente].nome, hotel.quartos[quarto].preco, diaDoMes, mes, ano);
-        strcpy(hotel.historico[2].historicos[hotel.Contador[2]], buffer);
-        hotel.Contador[2]++;
-        free(buffer);
+        FILE *historico_checkIn;
+                historico_checkIn = fopen("historico_checkIn.txt", "a");
+                fprintf(historico_checkIn,  "Numero do quarto %d / Nome do cliente: %s / Preço do quarto %.2f / Data %d/%d/%d", hotel.quartos[quarto].numero, hotel.clientes[cliente].nome, hotel.quartos[quarto].preco, diaDoMes, mes, ano);
+                fclose(historico_checkIn);
+                fflush(stdin);
 
         printf(VERDE "Cliente adcionado\n" RESET);
         system("pause");
         sleep(1);
         salvarDados(hotel);
+        sleep(1);
         Resevas(hotel);
     } else {
         printf(AMARELO "Limite alcançado\n" RESET);
@@ -780,12 +779,13 @@ void checkOutQuarto(Hotel hotel) {
             scanf("%d", &pago);
 
             if (pago == 1) {
-                char *buffer = (char*)malloc(sizeof(char));
-                sprintf(buffer, "Numero do quarto: %d / Preço pago: %.2f / Data %d/%d/%d / Dias hospedados: %d / Nome: %s / CPf: %s", hotel.quartos[hotel.clientes[cliente].quartoC].numero, hotel.quartos[hotel.clientes[cliente].quartoC].preco, diaDoMes, mes, ano, dias, hotel.clientes[cliente].nome, hotel.clientes[cliente].cpf);
-                strcpy(hotel.historico[3].historicos[hotel.Contador[3]], buffer);
-                hotel.Contador[3]++;
-                free(buffer);
 
+                FILE *historico_checkout;
+                historico_checkout = fopen("historico_checkout.txt", "a");
+                fprintf(historico_checkout, "Numero do quarto: %d / Preço pago: %.2f / Data %d/%d/%d / Dias hospedados: %d / Nome: %s / CPf: %s", hotel.quartos[hotel.clientes[cliente].quartoC].numero, hotel.quartos[hotel.clientes[cliente].quartoC].preco, diaDoMes, mes, ano, dias, hotel.clientes[cliente].nome, hotel.clientes[cliente].cpf);
+                fclose(historico_checkout);
+                fflush(stdin);
+  
                 hotel.clientes[cliente].temQuarto = 0;
                 hotel.quartos[hotel.clientes[cliente].quartoC].quartoVago[possicao] = 0;
                 hotel.quartos[hotel.clientes[cliente].quartoC].idCliente[possicao] = 0;
@@ -795,6 +795,8 @@ void checkOutQuarto(Hotel hotel) {
                 printf(VERDE "O Cliente pagou R$%d. dos %s hospedado.\n", preco, (dias > 2) ? dias + " dias" : dias + " dia" RESET);
                 sleep(1);
                 salvarDados(hotel);
+                sleep(1);
+
                 system("pause");
                 Resevas(hotel);
             }
@@ -882,13 +884,13 @@ void reservaUmQuarto(Hotel hotel) {
         Resevas(hotel);
     }
 
-    char *buffer = (char*)malloc(sizeof(char));
-    sprintf(buffer, "Numero do quarto %d / Nome do cliente: %s / Preço do quarto %.2f / Data da reserva %d/%d/%d", hotel.quartos[quarto].numero, hotel.clientes[cliente].nome, hotel.quartos[quarto].preco, diaDoMes, mes, ano);
-    strcpy(hotel.historico[4].historicos[hotel.Contador[4]], buffer);
-    hotel.Contador[4]++;
-    free(buffer);
-
+    FILE *historico_reserva;
+    historico_reserva = fopen("historico_reserva.txt", "a");
+    fprintf(historico_reserva, "Numero do quarto %d / Nome do cliente: %s / Preço do quarto %.2f / Data da reserva %d/%d/%d", hotel.quartos[quarto].numero, hotel.clientes[cliente].nome, hotel.quartos[quarto].preco, diaDoMes, mes, ano);
+    fclose(historico_reserva);     
     fflush(stdin);
+    sleep(1);
+
     hotel.clientes[cliente].reservadoC = 1;
     hotel.clientes[cliente].IdreservaC = quarto;
     hotel.quartos[quarto].Idreserva = cliente;
@@ -898,46 +900,92 @@ void reservaUmQuarto(Hotel hotel) {
     system("pause");
     sleep(1);
     salvarDados(hotel);
+    sleep(1);
     Resevas(hotel);
 }
 
 void historicoDeQuartos(Hotel hotel) {
-    system("cls");
-    for (int i = 0; i < hotel.Contador[0]; i++) {
-        printf(CIANO"%s\n"RESET, hotel.historico[0].historicos[i]);
+    FILE *historio_Quarto;
+    historio_Quarto = fopen("historio_Quarto.txt", "r");
+    if (historio_Quarto == NULL) {
+        printf(VERMELHO"Não a clientes registrados.\n"RESET);
+        system("pause");
+        return;
     }
+    system("cls");
+    char linha[100];
+    while (fgets(linha, sizeof(linha), historio_Quarto) != NULL) {
+        printf(CIANO"%s\n"RESET, linha);
+    }
+    fclose(historio_Quarto);
     system("pause");
     historicoMenu(hotel);
 }
 void historicoDeClientes(Hotel hotel) {
-    system("cls");
-    for (int i = 0; i < hotel.Contador[1]; i++) {
-        printf(CIANO"%s\n"RESET, hotel.historico[1].historicos[i]);
+    FILE *historio_cliente;
+    historio_cliente = fopen("historio_cliente.txt", "r");
+    if (historio_cliente == NULL) {
+        printf(VERMELHO"Não a clientes registrados.\n"RESET);
+        system("pause");
+        return;
     }
+    system("cls");
+    char linha[100];
+    while (fgets(linha, sizeof(linha), historio_cliente) != NULL) {
+        printf(CIANO"%s"RESET, linha);
+    }
+    fclose(historio_cliente);
     system("pause");
     historicoMenu(hotel);
 }
 void historicoDiaria(Hotel hotel) {
-    system("cls");
-    for (int i = 0; i < hotel.Contador[2]; i++) {
-        printf(CIANO"%s\n"RESET, hotel.historico[2].historicos[i]);
+    FILE *historico_checkIn;
+    historico_checkIn = fopen("historico_checkIn.txt", "r");
+    if (historico_checkIn == NULL) {
+        printf(VERMELHO"Não a clientes registrados.\n"RESET);
+        system("pause");
+        return;
     }
+    system("cls");
+    char linha[100];
+    while (fgets(linha, sizeof(linha), historico_checkIn) != NULL) {
+        printf(CIANO"%s"RESET, linha);
+    }
+    fclose(historico_checkIn);
     system("pause");
     historicoMenu(hotel);
 }
 void historicoDeReservas(Hotel hotel) {
-    system("cls");
-    for (int i = 0; i < hotel.Contador[4]; i++) {
-        printf(CIANO"%s\n"RESET, hotel.historico[3].historicos[i]);
+    FILE *historico_reserva;
+    historico_reserva = fopen("historico_reserva.txt", "r");
+    if (historico_reserva == NULL) {
+        printf(VERMELHO"Não a clientes registrados.\n"RESET);
+        system("pause");
+        return;
     }
+    system("cls");
+    char linha[100];
+    while (fgets(linha, sizeof(linha), historico_reserva) != NULL) {
+        printf(CIANO"%s"RESET, linha);
+    }
+    fclose(historico_reserva);
     system("pause");
     historicoMenu(hotel);
 }
 void historicoDePagamento(Hotel hotel) {
-    system("cls");
-    for (int i = 0; i < hotel.Contador[3]; i++) {
-        printf(CIANO"%s\n"RESET, hotel.historico[4].historicos[i]);
+    FILE *historico_checkout;
+    historico_checkout = fopen("historico_checkout.txt", "r");
+    if (historico_checkout == NULL) {
+        printf(VERMELHO"Não a clientes registrados.\n"RESET);
+        system("pause");
+        return;
     }
+    system("cls");
+    char linha[100];
+    while (fgets(linha, sizeof(linha), historico_checkout) != NULL) {
+        printf(CIANO"%s"RESET, linha);
+    }
+    fclose(historico_checkout);
     system("pause");
     historicoMenu(hotel);
 }
@@ -952,7 +1000,6 @@ void exibirClientes(Hotel hotel) {
         }
     } else {
         printf(VERMELHO"Não a clientes registrados.\n"RESET);
-        system("pause");
     }
     system("pause");
     Clientes(hotel);
@@ -1037,6 +1084,7 @@ void exibirQuartos(Hotel hotel) {
     system("pause");
     system("cls");
 }
+
 void Login(Hotel hotel) {
     char senha[20];
     int i = 0;
@@ -1075,7 +1123,6 @@ void Login(Hotel hotel) {
         Login(hotel);
     }
 }
-
 void Clientes(Hotel hotel) {
     int opcao;
     hotel.idAux = 1;
@@ -1131,6 +1178,7 @@ void Quartos(Hotel hotel) {
 
     fflush(stdin);
     do {
+        
         printf(AZUL"\n  MENU DE QUARTOS\n\n");
         printf("    [1] Exibir quartos\n");
         if (hotel.adm.adm == 1) {
@@ -1255,52 +1303,30 @@ void historicoMenu(Hotel hotel) {
         fflush(stdin);
         switch (opcao) {
             case 1:
-                system("cls");
-                if (hotel.Contador[1] != 0) {
+
                     historicoDeClientes(hotel);
                     break;
-                } else {
-                    printf(VERMELHO"Não a clientes registrados.\n"RESET);
-                    system("pause");
-                    break;
-                }
+               
             case 2:
-                system("cls");
-                if (hotel.Contador[0] != 0) {
+                
                     historicoDeQuartos(hotel);
                     break;
-                } else {
-                    printf(VERMELHO"Não a quartos registrados.\n"RESET);
-                    system("pause");
-                    break;
-                }
+               
             case 3:
-                if (hotel.Contador[2] != 0) {
+                
                     historicoDiaria(hotel);
                     break;
-                } else {
-                    printf(VERMELHO"Não a reservas registradas.\n"RESET);
-                    system("pause");
-                    break;
-                }
+               
             case 4:
-                if (hotel.Contador[3] != 0) {
+               
                     historicoDePagamento(hotel);
                     break;
-                } else {
-                    printf(VERMELHO"Não a pagamento registradas.\n"RESET);
-                    system("pause");
-                    break;
-                }
+              
             case 5:
-                if (hotel.Contador[4] != 0) {
+                
                     historicoDeReservas(hotel);
                     break;
-                } else {
-                    printf(VERMELHO"Não a pagamento registradas.\n"RESET);
-                    system("pause");
-                    break;
-                }
+                
             case 6:
                 system("cls");
                 printf(AMARELO"Voltando ao menu...\n"RESET);
@@ -1336,6 +1362,7 @@ void menu(Hotel hotel) {
                 break;
             case 2:
             sleep(1);
+                system("cls");
                 Quartos(hotel);
                 break;
             case 3:
@@ -1465,10 +1492,7 @@ int main() {
     hotel.clientes[0].existeCliente = 1;
 
     hotel.Hotelquartos = 0;
-    hotel.Contador[0] = 0;
-    hotel.Contador[1] = 0;
-    hotel.Contador[2] = 0;
-    hotel.Contador[3] = 0;
+
 
     FILE *file = fopen("hotel.bin", "rb");
         if (file == NULL) {
