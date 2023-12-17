@@ -945,7 +945,7 @@ void reservaUmQuarto(Hotel hotel) {
 void historicoDeQuartos(Hotel hotel) {
     system("cls");
     for (int i = 0; i < hotel.Contador[0]; i++) {
-        printf("%s\n", hotel.historico[i]);
+        printf(CIANO"%s\n"RESET, hotel.historico[i]);
     }
     system("pause");
     historicoMenu(hotel);
@@ -954,7 +954,7 @@ void historicoDeQuartos(Hotel hotel) {
 void historicoDeClientes(Hotel hotel) {
     system("cls");
     for (int i = 0; i < hotel.Contador[1]; i++) {
-        printf("%s\n", hotel.historico[i]);
+        printf(CIANO"%s\n"RESET, hotel.historico[i]);
     }
     system("pause");
     historicoMenu(hotel);
@@ -963,7 +963,7 @@ void historicoDeClientes(Hotel hotel) {
 void historicoDiaria(Hotel hotel) {
     system("cls");
     for (int i = 0; i < hotel.Contador[2]; i++) {
-        printf("%s\n", hotel.historico[i]);
+        printf(CIANO"%s\n"RESET, hotel.historico[i]);
     }
     system("pause");
     historicoMenu(hotel);
@@ -972,7 +972,7 @@ void historicoDiaria(Hotel hotel) {
 void historicoDeReservas(Hotel hotel) {
     system("cls");
     for (int i = 0; i < hotel.Contador[4]; i++) {
-        printf("%s\n", hotel.historico[i]);
+        printf(CIANO"%s\n"RESET, hotel.historico[i]);
     }
     system("pause");
     historicoMenu(hotel);
@@ -981,7 +981,7 @@ void historicoDeReservas(Hotel hotel) {
 void historicoDePagamento(Hotel hotel) {
     system("cls");
     for (int i = 0; i < hotel.Contador[3]; i++) {
-        printf("%s\n", hotel.historico[i]);
+        printf(CIANO"%s\n"RESET, hotel.historico[i]);
     }
     system("pause");
     historicoMenu(hotel);
@@ -994,11 +994,12 @@ void exibirClientes(Hotel hotel) {
     if (hotel.HotelIdCliente != 0) {
         for (int i = 1; i < hotel.HotelIdCliente; i++) {
             if (hotel.clientes[i].existeCliente == 1) {
-                printf("ID: %d - Nome: %s\n", i, hotel.clientes[i].nome);
+                printf(CIANO"ID: %d - Nome: %s\n"RESET, i, hotel.clientes[i].nome);
             }
         }
     } else {
-        printf("Não a clientes registrados.\n");
+        printf(VERMELHO"Não a clientes registrados.\n"RESET);
+        system("pause");
     }
     system("pause");
 
@@ -1172,11 +1173,11 @@ void Clientes(Hotel hotel) {
                 break;
             case 6:
                 system("cls");
-                printf("Voltando ao menu...\n");
+                printf(AMARELO"Voltando ao menu...\n"RESET);
                 menu(hotel);
                 break;
             default:
-                printf("Opção inválida. Tente novamente.\n");
+                printf(VERMELHO"Opção inválida. Tente novamente.\n"RESET);
         }
 
     } while (true);
@@ -1215,7 +1216,7 @@ void Quartos(Hotel hotel) {
                     break;
                 } else {
                     system("cls");
-                    printf("Voltando ao menu...\n");
+                    printf(AMARELO"Voltando ao menu...\n"RESET);
                     menu(hotel);
                     break;
                 }
@@ -1225,7 +1226,7 @@ void Quartos(Hotel hotel) {
                     excluirQuartos(hotel);
                     break;
                 } else {
-                    printf("Opção inválida. Tente novamente.\n");
+                    printf(VERMELHO"Opção inválida. Tente novamente.\n"RESET);
                     Quartos(hotel);
                     break;
                 }
@@ -1237,7 +1238,7 @@ void Quartos(Hotel hotel) {
                     editarQuartos(hotel);
                     break;
                 } else {
-                    printf("Opção inválida. Tente novamente.\n");
+                    printf(VERMELHO"Opção inválida. Tente novamente.\n"RESET);
                     Quartos(hotel);
                     break;
                 }
@@ -1246,17 +1247,17 @@ void Quartos(Hotel hotel) {
             case 5:
                 if (hotel.adm.adm == 1) {
                     system("cls");
-                    printf("Voltando ao menu...\n");
+                    printf(AMARELO"Voltando ao menu...\n"RESET);
                     menu(hotel);
                     break;
                 } else {
-                    printf("Opção inválida. Tente novamente.\n");
+                    printf(VERMELHO"Opção inválida. Tente novamente.\n"RESET);
                     Quartos(hotel);
                     break;
                 }
                 break;
             default:
-                printf("Opção inválida. Tente novamente.\n");
+                printf(VERMELHO"Opção inválida. Tente novamente.\n"RESET);
         }
 
     } while (true);
@@ -1297,11 +1298,11 @@ void Resevas(Hotel hotel) {
                 break;
             case 4:
                 system("cls");
-                printf("Voltando ao menu...\n");
+                printf(AMARELO"Voltando ao menu...\n"RESET);
                 menu(hotel);
                 break;
             default:
-                printf("Opção inválida. Tente novamente.\n");
+                printf(VERMELHO"Opção inválida. Tente novamente.\n"RESET);
         }
 
     } while (true);
@@ -1320,8 +1321,8 @@ void historicoMenu(Hotel hotel) {
         printf("    [4] Historico de pagamentos\n");
         printf("    [5] Historico de reserva\n");
 
-        printf(CIANO"\n  [6] Voltar ao menu\n"RESET);
-        printf("\nEscolha uma opção: ");
+        printf("\n  [6] Voltar ao menu\n");
+        printf(CIANO"\nEscolha uma opção: "RESET);
         scanf("%d", &opcao);
 
         fflush(stdin);
