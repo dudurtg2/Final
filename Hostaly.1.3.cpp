@@ -1487,6 +1487,7 @@ void image(int number) {
 
     switch (number) {
     case 1:
+        system("cls");
         printf(AZUL"                                        ||||||||||                               \n");
         printf("                                  ||||||||||||||||||||||                         \n");
         printf("                             ||||||||||||||||||||||||||||||||                    \n");
@@ -1514,9 +1515,10 @@ void image(int number) {
         printf("                                  ||||||||||||||||||||||                         \n");
         printf("                                        ||||||||||                               \n");
         printf(" ");
-        printf("\t\t\t\t      SISTEMA DE HOSPEDARIA\n"RESET);
+        printf("\t\t\t           SISTEMA DE HOSPEDARIA\n"RESET);
         break;
     case 2:
+        system("cls");
         printf(AZUL"              ¶¶¶¶    ¶¶¶    ¶¶¶                  \n");
         printf("                ¶¶¶    ¶¶¶    ¶¶¶¶                \n");
         printf("                  ¶¶     ¶¶¶    ¶¶¶               \n");
@@ -1562,6 +1564,7 @@ int main() {
 
     image(1);
     system("pause");
+    system("cls");
      
     FILE *file = fopen("Hostaly/saves/Hostaly.bin", "rb");
     if (file == NULL) {
