@@ -97,6 +97,7 @@ int buscarIdDoQuarto(int numero, Hotel Hotel);
 int buscarNumeroDeQuartos(int numero, Hotel hotel);
 int adicionarNoQuarto(int numero, int cliente, Hotel hotel);
 int procurarClienteNoQuarto(int numero, int cliente, Hotel hotel);
+void image(int number);
 
 void salvarDados(Hotel hotel) {
     FILE *file = fopen("Hostaly/saves/Hostaly.bin", "wb");
@@ -1382,7 +1383,9 @@ void menu(Hotel hotel) {
                     break;
                 } else {
                     hotel.adm.adm = 0;
+                    image(2);
                     printf(VERMELHO "Saindo...\n" RESET);
+                    system("pause");
                     abort();
                 }
             case 5:
@@ -1402,7 +1405,9 @@ void menu(Hotel hotel) {
                     break;
                 } else {
                     hotel.adm.adm = 0;
+                    image(2);
                     printf(VERMELHO "Saindo...\n" RESET);
+                    system("pause");
                     abort();
                 }
             default:
@@ -1478,6 +1483,67 @@ int adicionarNoQuarto(int numero, int cliente, Hotel hotel) {
     return 0;
 }
 
+void image(int number) {
+
+    switch (number) {
+    case 1:
+        printf(AZUL"                                        ||||||||||                               \n");
+        printf("                                  ||||||||||||||||||||||                         \n");
+        printf("                             ||||||||||||||||||||||||||||||||                    \n");
+        printf("                       ||||||||||||||||||||||||||||||||||||||||||||              \n");
+        printf("                  |||||||||||||||||||||||        |||||||||||||||||||||||         \n");
+        printf("            ||||||||||||||||||||                          ||||||||||||||||||||   \n");
+        printf("         |||||||||||||||||||                                  |||||||||||||||||||\n");
+        printf("         ||||||||||||||||                                        ||||||||||||||||\n");
+        printf("         ||||||||||||||                     ||                     ||||||||||||||\n");
+        printf("         ||||||||||||                |||||||||||||||||        |||||||||||||||||||\n");
+        printf("         |||||||||||              |||||||||||||||||||||||||||||||||||||||||||||||\n");
+        printf("         |||||||||||            |||||||||||||||||||||||||||   ||||||||||   ||||||\n");
+        printf("         ||||||||||             |||||||||||||||||||||||          |||          |||\n");
+        printf("         ||||||||||             |||||||||||||||||||||||          |||          |||\n");
+        printf("         |||||||||||            |||||||||||||||||||||||||||   ||||||||||   ||||||\n");
+        printf("         |||||||||||              |||||||||||||||||||||||||||||||||||||||||||||||\n");
+        printf("         ||||||||||||               ||||||||||||||||||        |||||||||||||||||||\n");
+        printf("         ||||||||||||||                     ||                     ||||||||||||||\n");
+        printf("         ||||||||||||||||                                        ||||||||||||||||\n");
+        printf("         |||||||||||||||||||                                  |||||||||||||||||||\n");
+        printf("             |||||||||||||||||||                          ||||||||||||||||||||   \n");
+        printf("                  ||||||||||||||||||||||||      ||||||||||||||||||||||||         \n");
+        printf("                       ||||||||||||||||||||||||||||||||||||||||||||              \n");
+        printf("                             ||||||||||||||||||||||||||||||||                    \n");
+        printf("                                  ||||||||||||||||||||||                         \n");
+        printf("                                        ||||||||||                               \n");
+        printf(" ");
+        printf("\t\t\t\t      SISTEMA DE HOSPEDARIA\n"RESET);
+        break;
+    case 2:
+        printf(AZUL"              ¶¶¶¶    ¶¶¶    ¶¶¶                  \n");
+        printf("                ¶¶¶    ¶¶¶    ¶¶¶¶                \n");
+        printf("                  ¶¶     ¶¶¶    ¶¶¶               \n");
+        printf("                   ¶¶     ¶¶     ¶¶               \n");
+        printf("                   ¶¶¶    ¶¶¶    ¶¶¶              \n");
+        printf("                   ¶¶     ¶¶     ¶¶               \n");
+        printf("                 ¶¶¶    ¶¶¶     ¶¶                \n");
+        printf("                                                  \n");
+        printf("          ¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶        \n");
+        printf(" ¶¶¶¶¶¶¶¶¶¶¶  ¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶        \n");
+        printf(" ¶¶¶¶¶¶¶¶¶¶¶   ¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶        \n");
+        printf(" ¶¶       ¶¶   ¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶        \n");
+        printf(" ¶¶       ¶¶   ¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶        \n");
+        printf(" ¶¶       ¶¶   ¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶        \n");
+        printf(" ¶¶¶¶¶¶¶¶¶¶¶  ¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶        \n");
+        printf(" ¶¶¶¶¶¶¶¶¶¶¶  ¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶        \n");
+        printf("           ¶¶   ¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶         \n");
+        printf("            ¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶            \n");
+        printf("                                                  \n");
+        printf(" ¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶ \n");
+        printf("  ¶¶         ¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶         ¶  \n");
+        printf(" ");
+        printf("\t\tOBRIGADO!!\n"RESET);
+        break;
+    }
+}
+
 int main() {
     setlocale(LC_ALL, "Portuguese_Brazil");
 
@@ -1494,6 +1560,9 @@ int main() {
     mkdir("Hostaly/historicos");
     mkdir("Hostaly/saves");
 
+    image(1);
+    system("pause");
+     
     FILE *file = fopen("Hostaly/saves/Hostaly.bin", "rb");
     if (file == NULL) {
         printf("Arquivo não encontrado.\n");
